@@ -1,6 +1,6 @@
 /* ==========================================================================
    MATH_DECIPHER // Cyber Terminal Stylesheet
-   Theme: Matrix Cyber / Code Decipher / Hacker HUD (v4.0 Exponents Ready)
+   Theme: Matrix Cyber / Code Decipher / Hacker HUD (v6.0 Daily Boss Ready)
    ========================================================================== */
 
 :root {
@@ -184,6 +184,7 @@ body {
 .text-cyan { color: var(--text-cyan) !important; }
 .text-gold { color: var(--text-gold) !important; }
 .text-alert { color: var(--text-alert) !important; }
+.text-center { text-align: center !important; }
 
 /* Control Buttons */
 .sys-controls {
@@ -676,6 +677,39 @@ body {
 .modal-body {
   padding: 1.25rem;
   overflow-y: auto;
+}
+
+/* DAILY CHALLENGE MODAL STYLING */
+.daily-card {
+  border-color: var(--text-gold);
+  box-shadow: 0 0 35px rgba(255, 183, 0, 0.3);
+}
+
+.daily-badge-box {
+  margin-bottom: 1rem;
+}
+
+.daily-badge-box h2 {
+  font-family: var(--font-tech);
+  font-size: 1.4rem;
+  color: #fff;
+  margin-top: 0.3rem;
+}
+
+.daily-status-card {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 183, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.daily-stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
 }
 
 /* DOCS MODAL STYLING */

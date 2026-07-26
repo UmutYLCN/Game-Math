@@ -27,7 +27,7 @@
       <div class="sys-brand">
         <span class="pulse-dot"></span>
         <span class="brand-title">MATH_DECIPHER</span>
-        <span class="sys-ver">v5.0_TRIGO</span>
+        <span class="sys-ver">v9.5_DECIMAL_BASES</span>
       </div>
 
       <div class="sys-metrics">
@@ -51,6 +51,9 @@
       </div>
 
       <div class="sys-controls">
+        <button id="daily-btn" class="cyber-btn sm gold-glow" title="Günün Özel Şifresi & 10 Soruluk Günlük Mücadele">
+          🏆 GÜNLÜK GÖREV
+        </button>
         <button id="mode-btn" class="cyber-btn sm primary" title="Çalışma Modunu Değiştir">
           🎯 MOD SEÇİMİ
         </button>
@@ -120,7 +123,7 @@
           <!-- Terminal Input Console -->
           <form id="answer-form" class="console-input-row" autocomplete="off">
             <div class="prompt-symbol">SYS_INPUT &gt;</div>
-            <input type="text" id="answer-input" class="cyber-input" placeholder="Cevap..." autofocus autocomplete="off" inputmode="numeric">
+            <input type="text" id="answer-input" class="cyber-input" placeholder="Cevap..." autofocus autocomplete="off" inputmode="text">
             <button type="submit" id="submit-btn" class="cyber-btn primary">
               <span>ŞİFREYİ ÇÖZ</span> [ENTER]
             </button>
@@ -172,7 +175,7 @@
 
     <!-- Footer -->
     <footer class="sys-footer">
-      <span>MATH_DECIPHER v5.0 TRIGO &copy; 2026</span>
+      <span>MATH_DECIPHER v9.5 DECIMAL BASES &copy; 2026</span>
       <span>DOKUNMATİK & KLAVYE DESTEKLİ</span>
     </footer>
   </div>
@@ -202,8 +205,14 @@
         <div class="mode-tabs">
           <button class="mode-tab-btn active" data-tab="mult-table-tab">✖️ ÇARPIM TABLOSU</button>
           <button class="mode-tab-btn" data-tab="mult-op-tab">✖️ ÇARPIM İŞLEMİ</button>
+          <button class="mode-tab-btn" data-tab="bases-tab">💾 SAYI SİSTEMLERİ (ONLUK / BINARY / HEX / OCTAL)</button>
           <button class="mode-tab-btn" data-tab="exp-tab">⚡ ÜSLÜ SAYILAR</button>
           <button class="mode-tab-btn" data-tab="root-tab">√ KAREKÖK</button>
+          <button class="mode-tab-btn" data-tab="log-tab">🪵 LOGARİTMA</button>
+          <button class="mode-tab-btn" data-tab="trivia-tab">🧠 GENEL MAT EZBERİ</button>
+          <button class="mode-tab-btn" data-tab="pct-tab">📊 YÜZDE HESABI</button>
+          <button class="mode-tab-btn" data-tab="geom-tab">📏 GEOMETRİ</button>
+          <button class="mode-tab-btn" data-tab="fact-tab">🎲 FAKTÖRİYEL</button>
           <button class="mode-tab-btn" data-tab="trigo-tab">📐 TRİGONOMETRİ</button>
           <button class="mode-tab-btn" data-tab="add-tab">➕ TOPLAMA</button>
           <button class="mode-tab-btn" data-tab="sub-tab">➖ ÇIKARMA</button>
@@ -286,6 +295,47 @@
           </div>
         </div>
 
+        <!-- TAB BASES: COMPUTER NUMBER SYSTEMS (ONLUK TABAN DÖNÜŞÜMLERİ DAHİL) -->
+        <div id="bases-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">💾 BİLGİSAYAR SAYI SİSTEMLERİ & ONLUK TABAN DÖNÜŞÜMÜ</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn gold-glow-btn" data-type="bases-bin">
+                <span class="preset-title">💻 Binary (0b) ➔ Onluk (Decimal)</span>
+                <span class="preset-sub">0b1010 = 10, 0b1111 = 15</span>
+              </button>
+              <button class="preset-btn gold-glow-btn" data-type="bases-dec2bin">
+                <span class="preset-title">💻 Onluk (Decimal) ➔ Binary</span>
+                <span class="preset-sub">10 (Binary) = 1010 (veya 0b1010)</span>
+              </button>
+              <button class="preset-btn" data-type="bases-hex">
+                <span class="preset-title">🔴 Hexadecimal (0x) ➔ Onluk</span>
+                <span class="preset-sub">0x0A = 10, 0x1F = 31, 0xFF = 255</span>
+              </button>
+              <button class="preset-btn" data-type="bases-dec2hex">
+                <span class="preset-title">🔴 Onluk (Decimal) ➔ Hexadecimal</span>
+                <span class="preset-sub">31 (Hex) = 1F, 10 (Hex) = A</span>
+              </button>
+              <button class="preset-btn" data-type="bases-oct">
+                <span class="preset-title">🐙 Octal (0o) ➔ Onluk</span>
+                <span class="preset-sub">0o10 = 8, 0o12 = 10, 0o20 = 16</span>
+              </button>
+              <button class="preset-btn" data-type="bases-dec2oct">
+                <span class="preset-title">🐙 Onluk (Decimal) ➔ Octal</span>
+                <span class="preset-sub">16 (Octal) = 20, 10 (Octal) = 12</span>
+              </button>
+              <button class="preset-btn" data-type="bases-add">
+                <span class="preset-title">⚡ Hex & Binary Toplama</span>
+                <span class="preset-sub">0x0A + 0x05 = 15, 0b10 + 0b11 = 5</span>
+              </button>
+              <button class="preset-btn extreme" data-type="bases-mix">
+                <span class="preset-title">🔥 Karışık Çift Yönlü Siber Dönüşüm</span>
+                <span class="preset-sub">Tüm Onluk, Binary, Hex ve Octal dönüşümleri</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- TAB 3: EXPONENTS MODES -->
         <div id="exp-tab" class="tab-content">
           <div class="direct-range-card">
@@ -344,7 +394,116 @@
           </div>
         </div>
 
-        <!-- TAB 5: TRIGONOMETRY MODES -->
+        <!-- TAB LOGARITHM -->
+        <div id="log-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">🪵 LOGARİTMA HESAPLAMA MODU</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn gold-glow-btn" data-type="log-23">
+                <span class="preset-title">🪵 2 ve 3 Tabanlı Logaritma</span>
+                <span class="preset-sub">log₂(8)=3, log₂(32)=5, log₃(81)=4</span>
+              </button>
+              <button class="preset-btn" data-type="log-10">
+                <span class="preset-title">🔟 Onluk Taban (log₁₀)</span>
+                <span class="preset-sub">log(100)=2, log(1000)=3, log(10000)=4</span>
+              </button>
+              <button class="preset-btn" data-type="log-rule">
+                <span class="preset-title">🆔 Logaritma Kuralları</span>
+                <span class="preset-sub">logₐ(a)=1, logₐ(1)=0, log₂(8)+log₃(9)=5</span>
+              </button>
+              <button class="preset-btn extreme" data-type="log-mix">
+                <span class="preset-title">🔥 Karışık Logaritma Testi</span>
+                <span class="preset-sub">Tüm taban ve kural soruları karışık</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB TRIVIA -->
+        <div id="trivia-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">🧠 GENEL MATEMATİK KAVRAM & SABİT EZBERİ</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn gold-glow-btn" data-type="trivia-angles">
+                <span class="preset-title">📐 Açı & Sabit Ezberi</span>
+                <span class="preset-sub">Üçgen (180°), Dörtgen (360°), Beşgen (540°), Altıgen (720°)</span>
+              </button>
+              <button class="preset-btn" data-type="trivia-primes">
+                <span class="preset-title">🔢 Asal & Mükemmel Sayılar</span>
+                <span class="preset-sub">En küçük asal (2), 100'e kadar asal sayısı (25), Mükemmel sayı (6)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="trivia-mix">
+                <span class="preset-title">🔥 Karışık Genel Matematik Ezberi</span>
+                <span class="preset-sub">Tüm matematiksel tanım, sabit ve kural testi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB YÜZDE -->
+        <div id="pct-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">📊 YÜZDE VE ORAN HESAPLAMA MODU</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn gold-glow-btn" data-type="pct-basic">
+                <span class="preset-title">% Temel Yüzde Alma</span>
+                <span class="preset-sub">%10, %20, %25, %50 zihinsel hesap (240'ın %25'i)</span>
+              </button>
+              <button class="preset-btn" data-type="pct-adv">
+                <span class="preset-title">% İleri Yüzde & Artış</span>
+                <span class="preset-sub">%15, %30, %75, %150 yüzde hesabı</span>
+              </button>
+              <button class="preset-btn extreme" data-type="pct-mix">
+                <span class="preset-title">🔥 Karışık Yüzde Problemleri</span>
+                <span class="preset-sub">Hızlı zihinsel yüzde pratikleri</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB GEOMETRİ -->
+        <div id="geom-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">📏 GEOMETRİ & ÖZEL ÜÇGENLER MODU</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn gold-glow-btn" data-type="geom-pyth">
+                <span class="preset-title">📐 Özel Üçgen Hipotenüsü</span>
+                <span class="preset-sub">3-4-5, 5-12-13, 8-15-17 dik üçgenleri</span>
+              </button>
+              <button class="preset-btn" data-type="geom-area">
+                <span class="preset-title">⏹️ Alan & Çevre Hesabı</span>
+                <span class="preset-sub">Kare ve dik dörtgen alan/çevre hesaplama</span>
+              </button>
+              <button class="preset-btn extreme" data-type="geom-mix">
+                <span class="preset-title">🔥 Karışık Geometri Testi</span>
+                <span class="preset-sub">Özel üçgenler ve alan formülleri karışık</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB FAKTÖRİYEL -->
+        <div id="fact-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">🎲 FAKTÖRİYEL HESAPLAMA MODU</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn gold-glow-btn" data-type="fact-basic">
+                <span class="preset-title">🎲 Temel Faktöriyel (n!)</span>
+                <span class="preset-sub">1! ile 6! arası hesabı (5! = 120, 4! = 24)</span>
+              </button>
+              <button class="preset-btn" data-type="fact-ratio">
+                <span class="preset-title">➗ Faktöriyel Oranları</span>
+                <span class="preset-sub">Kısaltmalı faktöriyel bölmesi (6! / 4! = 30)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="fact-mix">
+                <span class="preset-title">🔥 Karışık Faktöriyel İşlemleri</span>
+                <span class="preset-sub">Faktöriyel toplam ve farkları</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB TRIGONOMETRY -->
         <div id="trigo-tab" class="tab-content">
           <div class="direct-range-card">
             <h4 class="section-title">📐 TRİGONOMETRİK EZBER MODU SEÇİN</h4>
@@ -369,7 +528,7 @@
           </div>
         </div>
 
-        <!-- TAB 6: ADDITION MODES -->
+        <!-- TAB ADDITION -->
         <div id="add-tab" class="tab-content">
           <div class="direct-range-card">
             <h4 class="section-title">➕ TOPLAMA İŞLEMİ MODU SEÇİN</h4>
@@ -398,7 +557,7 @@
           </div>
         </div>
 
-        <!-- TAB 7: SUBTRACTION MODES -->
+        <!-- TAB SUBTRACTION -->
         <div id="sub-tab" class="tab-content">
           <div class="direct-range-card">
             <h4 class="section-title">➖ ÇIKARMA İŞLEMİ MODU SEÇİN</h4>
@@ -427,7 +586,7 @@
           </div>
         </div>
 
-        <!-- TAB 8: DIVISION MODES -->
+        <!-- TAB DIVISION -->
         <div id="div-tab" class="tab-content">
           <div class="direct-range-card">
             <h4 class="section-title">➗ BÖLME İŞLEMİ MODU SEÇİN</h4>
@@ -456,7 +615,7 @@
           </div>
         </div>
 
-        <!-- TAB 9: CAMPAIGN LEVELS -->
+        <!-- TAB CAMPAIGN -->
         <div id="campaign-tab" class="tab-content">
           <h4 class="section-title">🏆 10 KATMANLI SİBER KARİYER MODU:</h4>
           <p class="tab-sub text-dim">Adım adım zorlaşan 10 siber katmanda şifre çözme becerini test et.</p>
@@ -480,6 +639,12 @@
         <div class="docs-tabs">
           <button class="docs-tab-btn active" data-docstab="doc-exp">⚡ ÜSLÜ SAYILAR</button>
           <button class="docs-tab-btn" data-docstab="doc-root">√ KAREKÖK İFADELER</button>
+          <button class="docs-tab-btn" data-docstab="doc-bases">💾 SAYI SİSTEMLERİ (ONLUK / BINARY / HEX)</button>
+          <button class="docs-tab-btn" data-docstab="doc-trivia">🧠 GENEL MAT EZBERİ</button>
+          <button class="docs-tab-btn" data-docstab="doc-log">🪵 LOGARİTMA HARİTASI</button>
+          <button class="docs-tab-btn" data-docstab="doc-pct">📊 YÜZDE KISAYOLLARI</button>
+          <button class="docs-tab-btn" data-docstab="doc-geom">📏 GEOMETRİ CETVELİ</button>
+          <button class="docs-tab-btn" data-docstab="doc-fact">🎲 FAKTÖRİYEL CETVELİ</button>
           <button class="docs-tab-btn" data-docstab="doc-trigo">📐 TRİGONOMETRİ CETVELİ</button>
           <button class="docs-tab-btn" data-docstab="doc-mult-adv">🔥 3 & 2 BASAMAK ÇARPMA</button>
           <button class="docs-tab-btn" data-docstab="doc-mult-basic">✖️ TEMEL ÇARPMA</button>
@@ -504,144 +669,222 @@
           </div>
         </div>
 
-        <!-- DOCS TAB TRİGONOMETRİ: TRIGONOMETRY SHORTCUTS & FULL EZBER CETVELİ -->
+        <!-- DOCS TAB BASES: COMPUTER NUMBER SYSTEMS -->
+        <div id="doc-bases" class="docs-tab-content">
+          <div class="shortcut-card extreme-border">
+            <div class="shortcut-header">
+              <span class="shortcut-num badge-red">SİBER TABAN 01</span>
+              <h4>Bilgisayar & Onluk Sayı Sistemleri Cetveli (Binary, Hex & Octal)</h4>
+            </div>
+            <div class="example-box">
+              <span class="ex-title">📌 1. Binary (İkili Taban) & Onluk Dönüşüm:</span>
+              <span class="ex-step">Basamak Değerleri: <strong>16 | 8 | 4 | 2 | 1</strong></span>
+              <span class="ex-step">🔹 \(0b01010 \implies \mathbf{10}\)</span>
+              <span class="ex-step">🔹 \(10 \text{ (Binary)} \implies \mathbf{1010}\)</span>
+            </div>
+
+            <div class="example-box" style="margin-top: 0.5rem;">
+              <span class="ex-title">📌 2. Hexadecimal (Onaltılı Taban) & Onluk Dönüşüm:</span>
+              <span class="ex-step">Harf Karşılıkları: <strong>A=10, B=11, C=12, D=13, E=14, F=15</strong></span>
+              <span class="ex-step">🔹 \(0x0A \implies \mathbf{10}\) | \(0x1F \implies \mathbf{31}\)</span>
+              <span class="ex-step">🔹 \(15 \text{ (Hex)} \implies \mathbf{F}\) | \(31 \text{ (Hex)} \implies \mathbf{1F}\)</span>
+            </div>
+
+            <div class="example-box" style="margin-top: 0.5rem;">
+              <span class="ex-title">📌 3. Octal (Sekizli Taban) & Onluk Dönüşüm:</span>
+              <span class="ex-step">🔹 \(0o12 \implies \mathbf{10}\) | \(16 \text{ (Octal)} \implies \mathbf{20}\)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB TRIVIA -->
+        <div id="doc-trivia" class="docs-tab-content">
+          <div class="shortcut-card extreme-border">
+            <div class="shortcut-header">
+              <span class="shortcut-num badge-red">MAT EZBER 01</span>
+              <h4>Geometri İç Açı Toplamları Cetveli</h4>
+            </div>
+            <div class="example-box">
+              <span class="ex-step">🔹 Üçgenin iç açıları toplamı = <strong class="text-gold">180°</strong></span>
+              <span class="ex-step">🔹 Dörtgenin iç açıları toplamı = <strong class="text-gold">360°</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB LOGARİTMA -->
+        <div id="doc-log" class="docs-tab-content">
+          <div class="shortcut-card extreme-border">
+            <div class="shortcut-header">
+              <span class="shortcut-num badge-red">LOGARİTMA 01</span>
+              <h4>Logaritmanın Temel Mantığı</h4>
+            </div>
+            <div class="example-box">
+              <span class="ex-step">🔹 \(\log_2(8) = \mathbf{3}\) | \(\log_2(32) = \mathbf{5}\) | \(\log_3(81) = \mathbf{4}\)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB YÜZDE -->
+        <div id="doc-pct" class="docs-tab-content">
+          <div class="shortcut-card extreme-border">
+            <div class="shortcut-header">
+              <span class="shortcut-num badge-red">YÜZDE 01</span>
+              <h4>Zihinden Yüzde Hesaplama Kısayolları</h4>
+            </div>
+            <div class="example-box">
+              <span class="ex-step">🔹 <strong>%50:</strong> 2'ye böl | <strong>%25:</strong> 4'e böl | <strong>%10:</strong> 10'a böl</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB GEOMETRİ -->
+        <div id="doc-geom" class="docs-tab-content">
+          <div class="shortcut-card extreme-border">
+            <div class="shortcut-header">
+              <span class="shortcut-num badge-red">GEOMETRİ 01</span>
+              <h4>Dik Üçgen Özel Hipotenüs Oranları</h4>
+            </div>
+            <div class="example-box">
+              <span class="ex-step">🔹 3-4-5, 5-12-13, 8-15-17, 7-24-25 katları</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB FAKTÖRİYEL -->
+        <div id="doc-fact" class="docs-tab-content">
+          <div class="shortcut-card extreme-border">
+            <div class="shortcut-header">
+              <span class="shortcut-num badge-red">FAKTÖRİYEL 01</span>
+              <h4>Faktöriyel Değerleri (\(n!\))</h4>
+            </div>
+            <div class="example-box">
+              <span class="ex-step">🔹 \(0! = 1\) | \(1! = 1\) | \(2! = 2\) | \(3! = 6\) | \(4! = 24\) | \(5! = 120\)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB TRİGONOMETRİ -->
         <div id="doc-trigo" class="docs-tab-content">
           <div class="shortcut-card extreme-border">
             <div class="shortcut-header">
               <span class="shortcut-num badge-red">TRİGO 01</span>
-              <h4>Eksiksiz Özel Açılar Ezber Cetveli (0° - 360°)</h4>
+              <h4>Eksiksiz Özel Açılar Ezber Cetveli</h4>
             </div>
-            <p class="shortcut-desc">Oyundaki tüm Trigonometri ezber sorularının tam cevap anahtarı:</p>
             <div class="example-box">
-              <span class="ex-title">📌 0°, 30°, 45°, 60°, 90° Temel Değerler:</span>
-              <span class="ex-step">🔹 \(\sin(0^\circ) = 0\) | \(\sin(30^\circ) = 0.5\) | \(\sin(45^\circ) \approx 0.707\) | \(\sin(90^\circ) = 1\)</span>
-              <span class="ex-step">🔹 \(\cos(0^\circ) = 1\) | \(\cos(60^\circ) = 0.5\) | \(\cos(90^\circ) = 0\)</span>
-              <span class="ex-step">🔹 \(\tan(45^\circ) = 1\) | <strong class="text-gold">\(\cot(45^\circ) = 1\)</strong> | \(\tan(0^\circ) = 0\)</span>
-              <span class="ex-step">🔹 \(\sin(45^\circ) \times \cos(45^\circ) = 0.5\)</span>
-            </div>
-
-            <div class="example-box" style="margin-top: 0.5rem;">
-              <span class="ex-title">📌 Eksen Açıları (180°, 270°, 360°):</span>
-              <span class="ex-step">🔹 \(\sin(180^\circ) = 0\) | \(\cos(180^\circ) = -1\) | \(\tan(180^\circ) = 0\)</span>
-              <span class="ex-step">🔹 \(\sin(270^\circ) = -1\) | \(\cos(270^\circ) = 0\)</span>
-              <span class="ex-step">🔹 \(\sin(360^\circ) = 0\) | \(\cos(360^\circ) = 1\)</span>
-            </div>
-
-            <div class="example-box" style="margin-top: 0.5rem;">
-              <span class="ex-title">📌 Trigonometrik Özdeşlikler:</span>
-              <span class="ex-step">1) \(\sin^2(x) + \cos^2(x) = 1\)</span>
-              <span class="ex-step">2) \(\tan(x) \cdot \cot(x) = 1\)</span>
-              <span class="ex-step">3) Tümler Açı: \(\sin(60^\circ) = \cos(30^\circ)\), \(\cos(40^\circ) = \sin(50^\circ)\)</span>
+              <span class="ex-step">🔹 \(\sin(30^\circ) = 0.5\) | \(\cos(60^\circ) = 0.5\) | \(\tan(45^\circ) = 1\) | \(\cot(45^\circ) = 1\)</span>
             </div>
           </div>
         </div>
 
-        <!-- DOCS TAB KAREKÖK: SQUARE ROOTS SHORTCUTS -->
+        <!-- DOCS TAB KAREKÖK -->
         <div id="doc-root" class="docs-tab-content">
           <div class="shortcut-card extreme-border">
             <div class="shortcut-header">
               <span class="shortcut-num badge-red">KAREKÖK 01</span>
-              <h4>Tam Kare Kök Hızlı Tahmin Yöntemi</h4>
+              <h4>Tam Kare Kök Tahmini</h4>
             </div>
-            <p class="shortcut-desc">Büyük sayıların karekökünü bilinen tam kare referanslar üzerinden saniyeler içinde zihinden tahmin edin!</p>
             <div class="example-box">
-              <span class="ex-title">📌 Örnek: <strong class="text-green">\(\sqrt{1849}\)</strong></span>
-              <span class="ex-step">1) \(40^2 = 1600\) ve \(50^2 = 2500\) arası. Sayı 40'a daha yakın.</span>
-              <span class="ex-step">2) Son basamak 9 olduğu için son rakam 3 veya 7 olmalı (\(3^2=9\), \(7^2=49\)).</span>
-              <span class="ex-step">3) 40'a yakın olduğu için tahmin: <strong>43</strong> (Kontrol: \(43^2 = 1849\)).</span>
-              <span class="ex-result">Sonuç: <strong class="text-gold">43</strong></span>
+              <span class="ex-step">🔹 \(\sqrt{144} = 12\) | \(\sqrt{225} = 15\) | \(\sqrt{400} = 20\)</span>
             </div>
           </div>
         </div>
 
-        <!-- DOCS TAB 1: ADVANCED 3 & 2 DIGIT MULTIPLICATION SHORTCUTS -->
+        <!-- DOCS TAB MULT ADV -->
         <div id="doc-mult-adv" class="docs-tab-content">
           <div class="shortcut-card extreme-border">
             <div class="shortcut-header">
               <span class="shortcut-num badge-red">VEDİK 01</span>
-              <h4>Vedik Çapraz Çarpma Yöntemi (Urdhva-Tiryagbhyam)</h4>
+              <h4>Vedik Çapraz Çarpma</h4>
             </div>
-            <p class="shortcut-desc">3 Basamaklı bir sayı ile 2 Basamaklı bir sayıyı (\(abc \times de\)) dikey-çapraz dizerek tek satırda hesaplayın!</p>
             <div class="example-box">
-              <span class="ex-title">📌 Örnek: <strong class="text-green">123 × 12</strong></span>
-              <span class="ex-step">1. Adım (Sağ Dikey): <strong>3 × 2 = 6</strong> ➔ (Birler: 6)</span>
-              <span class="ex-step">2. Adım (Sağ Çapraz): <strong>(2×2) + (3×1) = 4 + 3 = 7</strong> ➔ (Onlar: 7)</span>
-              <span class="ex-step">3. Adım (Sol Çapraz): <strong>(1×2) + (2×1) = 2 + 2 = 4</strong> ➔ (Yüzler: 4)</span>
-              <span class="ex-step">4. Adım (Sol Dikey): <strong>1 × 1 = 1</strong> ➔ (Binler: 1)</span>
-              <span class="ex-result">Sonuç: <strong class="text-gold">1476</strong></span>
+              <span class="ex-step">📌 Örnek: 123 × 12 = 1476</span>
             </div>
           </div>
         </div>
 
-        <!-- DOCS TAB 2: BASIC MULTIPLICATION SHORTCUTS -->
+        <!-- DOCS TAB MULT BASIC -->
         <div id="doc-mult-basic" class="docs-tab-content">
           <div class="shortcut-card">
             <div class="shortcut-header">
               <span class="shortcut-num">01</span>
-              <h4>11 ile Kısa Yoldan Çarpma (2 Basamaklı)</h4>
+              <h4>11 ile Kısa Yoldan Çarpma</h4>
             </div>
-            <p class="shortcut-desc">İki basamaklı bir sayıyı 11 ile çarparken rakamları iki yana ayırın ve ortasına rakamlar toplamını yazın!</p>
             <div class="example-box">
-              <span class="ex-title">📌 Örnek: <strong class="text-green">36 × 11</strong></span>
-              <span class="ex-step">1) Rakamları ayır: <strong>3 _ 6</strong></span>
-              <span class="ex-step">2) Topla: <strong>3 + 6 = 9</strong></span>
-              <span class="ex-result">Sonuç: <strong class="text-gold">396</strong></span>
+              <span class="ex-step">📌 Örnek: 36 × 11 = 396</span>
             </div>
           </div>
         </div>
 
-        <!-- DOCS TAB 3: ADDITION SHORTCUTS -->
+        <!-- DOCS TAB ADD -->
         <div id="doc-add" class="docs-tab-content">
           <div class="shortcut-card">
             <div class="shortcut-header">
               <span class="shortcut-num">01</span>
-              <h4>Soldan Sağa Toplama Yöntemi (Left-to-Right)</h4>
+              <h4>Soldan Sağa Toplama</h4>
             </div>
-            <p class="shortcut-desc">Zihinden hızlı toplama yaparken birler basamağından değil, en soldaki en büyük basamaktan başlayın!</p>
             <div class="example-box">
-              <span class="ex-title">📌 Örnek: <strong class="text-green">346 + 285</strong></span>
-              <span class="ex-step">1) Yüzlükler: <strong>300 + 200 = 500</strong></span>
-              <span class="ex-step">2) Onluklar: <strong>40 + 80 = 120</strong> ➔ (Toplam: 620)</span>
-              <span class="ex-step">3) Birlikler: <strong>6 + 5 = 11</strong> ➔ (Toplam: 631)</span>
-              <span class="ex-result">Sonuç: <strong class="text-gold">631</strong></span>
+              <span class="ex-step">📌 Örnek: 346 + 285 = 631</span>
             </div>
           </div>
         </div>
 
-        <!-- DOCS TAB 4: SUBTRACTION SHORTCUTS -->
+        <!-- DOCS TAB SUB -->
         <div id="doc-sub" class="docs-tab-content">
           <div class="shortcut-card">
             <div class="shortcut-header">
               <span class="shortcut-num">01</span>
-              <h4>100 ve 1000'den Çıkarma (9'lar ve 10'lar Kuralı)</h4>
+              <h4>1000'den Çıkarma</h4>
             </div>
-            <p class="shortcut-desc">1000 gibi tam katlardan sayı çıkarırken eldesiz çıkarma yapın: En son basamağı 10'dan, diğer basamakları 9'dan çıkarın!</p>
             <div class="example-box">
-              <span class="ex-title">📌 Örnek: <strong class="text-green">1000 - 437</strong></span>
-              <span class="ex-step">1) Yüzler (9'dan çıkar): <strong>9 - 4 = 5</strong></span>
-              <span class="ex-step">2) Onlar (9'dan çıkar): <strong>9 - 3 = 6</strong></span>
-              <span class="ex-step">3) Birler (10'dan çıkar): <strong>10 - 7 = 3</strong></span>
-              <span class="ex-result">Sonuç: <strong class="text-gold">563</strong></span>
+              <span class="ex-step">📌 Örnek: 1000 - 437 = 563</span>
             </div>
           </div>
         </div>
 
-        <!-- DOCS TAB 5: DIVISION SHORTCUTS -->
+        <!-- DOCS TAB DIV -->
         <div id="doc-div" class="docs-tab-content">
           <div class="shortcut-card">
             <div class="shortcut-header">
               <span class="shortcut-num">01</span>
-              <h4>5 ile Kısa Yoldan Bölme Kuralı</h4>
+              <h4>5 ile Bölme</h4>
             </div>
-            <p class="shortcut-desc">Bir sayıyı 5'e bölmek için sayıyı 2 ile çarpıp 10'a bölün (virgülü 1 sola kaydırın)!</p>
             <div class="example-box">
-              <span class="ex-title">📌 Örnek: <strong class="text-green">165 ÷ 5</strong></span>
-              <span class="ex-step">1) Sayıyı 2 ile çarp: <strong>165 × 2 = 330</strong></span>
-              <span class="ex-step">2) 10'a böl (son 0'ı sil): <strong>33</strong></span>
-              <span class="ex-result">Sonuç: <strong class="text-gold">33</strong></span>
+              <span class="ex-step">📌 Örnek: 165 ÷ 5 = 33</span>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY CHALLENGE MODAL -->
+  <div id="daily-modal" class="modal-overlay hidden">
+    <div class="modal-content cyber-window daily-card">
+      <div class="modal-header">
+        <h3>🏆 SİBER GÜNLÜK MÜCADELE (DAILY BOSS)</h3>
+        <button id="close-daily-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="daily-badge-box">
+          <span class="glitch-title gold-glow">DAILY CIPHER MISSION</span>
+          <h2 id="daily-date-title">TARIH: 2026-07-26</h2>
+        </div>
+        <p class="tab-sub text-dim" style="margin-bottom: 1.2rem;">Her gün tüm siber matematikçilere aynı 10 soruluk özel görev verilir. En hızlı sürede 10/10 yaparak liderliği kap!</p>
+
+        <div class="daily-status-card">
+          <div class="daily-stat-row">
+            <span>DURUM:</span>
+            <strong id="daily-status-text" class="text-gold">HENÜZ TAMAMLATILMADI</strong>
+          </div>
+          <div class="daily-stat-row">
+            <span>EN İYİ GÜNLÜK SKOR:</span>
+            <strong id="daily-best-score" class="text-green">0 PTS</strong>
+          </div>
+        </div>
+
+        <button id="start-daily-btn" class="cyber-btn primary lg action-full-btn" style="margin-top: 1.5rem;">
+          🚀 GÜNLÜK MÜCADELEYİ BAŞLAT (10 SORU)
+        </button>
       </div>
     </div>
   </div>

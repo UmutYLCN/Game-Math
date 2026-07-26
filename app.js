@@ -1,5 +1,5 @@
 /**
- * MATH_DECIPHER // Core Game Engine v5.0 (Trigonometry & KaTeX Powered Renderer)
+ * MATH_DECIPHER // Core Game Engine v9.5 (Decimal & Computer Number Systems)
  * Cyber Math Decryption Game
  */
 
@@ -100,18 +100,32 @@ const BADGES = [
 
 // App State
 let state = {
-  activeMode: 'CAMPAIGN', // 'CAMPAIGN' | 'MULTIPLICATION_TABLE' | 'MULTIPLICATION_OP' | 'EXPONENTS' | 'SQUARE_ROOTS' | 'TRIGONOMETRY' | 'ADDITION' | 'SUBTRACTION' | 'DIVISION'
+  activeMode: 'CAMPAIGN',
   
   multMin: 1,
   multMax: 10,
 
   multOpModeType: 'rr',
+  basesModeType: 'bin', // 'bin' | 'dec2bin' | 'hex' | 'dec2hex' | 'oct' | 'dec2oct' | 'add' | 'mix'
   expModeType: '2n',
   rootModeType: 'basic',
-  trigoModeType: 'basic', // 'basic' | 'quad' | 'ident' | 'mix'
+  logModeType: '23',
+  triviaModeType: 'angles',
+  pctModeType: 'basic',
+  geomModeType: 'pyth',
+  factModeType: 'basic',
+  trigoModeType: 'basic',
   addModeType: 'rr',
   subModeType: 'rr',
   divModeType: 'basit',
+
+  dailyState: {
+    dateStr: '',
+    completed: false,
+    bestScore: 0,
+    currentIndex: 0,
+    questions: []
+  },
 
   hackerTimerEnabled: false,
   timerSeconds: 60,
@@ -261,17 +275,295 @@ function drawMatrix() {
 }
 
 // ==========================================
-// 5. QUESTION GENERATORS (TRIGONOMETRY INCLUDED)
+// 5. QUESTION GENERATORS (DECIMAL & BASES INCLUDED)
 // ==========================================
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// TRIGONOMETRY GENERATOR (YENİ TRİGONOMETRİ MOTORU)
+// COMPUTER BASES GENERATOR (ONLUK TABAN DÖNÜŞÜMLERİ DAHİL)
+function genCustomBases() {
+  if (state.basesModeType === 'bin') {
+    const num = getRandomInt(1, 31);
+    const binStr = '0b' + num.toString(2).padStart(5, '0');
+    return { q: `${binStr} (Decimal) = ?`, ans: String(num) };
+  } else if (state.basesModeType === 'dec2bin') {
+    const num = getRandomInt(1, 31);
+    const binStr = num.toString(2);
+    return { q: `${num} (Binary) = 0b?`, ans: binStr, altAns: '0b' + binStr };
+  } else if (state.basesModeType === 'hex') {
+    const num = getRandomInt(5, 255);
+    const hexStr = '0x' + num.toString(16).toUpperCase();
+    return { q: `${hexStr} (Decimal) = ?`, ans: String(num) };
+  } else if (state.basesModeType === 'dec2hex') {
+    const num = getRandomInt(5, 255);
+    const hexStr = num.toString(16).toUpperCase();
+    return { q: `${num} (Hexadecimal) = 0x?`, ans: hexStr, altAns: '0x' + hexStr };
+  } else if (state.basesModeType === 'oct') {
+    const num = getRandomInt(5, 63);
+    const octStr = '0o' + num.toString(8);
+    return { q: `${octStr} (Decimal) = ?`, ans: String(num) };
+  } else if (state.basesModeType === 'dec2oct') {
+    const num = getRandomInt(5, 63);
+    const octStr = num.toString(8);
+    return { q: `${num} (Octal) = 0o?`, ans: octStr, altAns: '0o' + octStr };
+  } else if (state.basesModeType === 'add') {
+    const isHex = Math.random() > 0.5;
+    if (isHex) {
+      const a = getRandomInt(2, 15);
+      const b = getRandomInt(2, 15);
+      return { q: `0x${a.toString(16).toUpperCase()} + 0x${b.toString(16).toUpperCase()} (Decimal) = ?`, ans: String(a + b) };
+    } else {
+      const a = getRandomInt(2, 15);
+      const b = getRandomInt(2, 15);
+      return { q: `0b${a.toString(2)} + 0b${b.toString(2)} (Decimal) = ?`, ans: String(a + b) };
+    }
+  } else {
+    const choice = getRandomInt(1, 6);
+    if (choice === 1) return genCustomBases_Bin();
+    if (choice === 2) return genCustomBases_Dec2Bin();
+    if (choice === 3) return genCustomBases_Hex();
+    if (choice === 4) return genCustomBases_Dec2Hex();
+    if (choice === 5) return genCustomBases_Oct();
+    return genCustomBases_Dec2Oct();
+  }
+}
+
+function genCustomBases_Bin() {
+  const num = getRandomInt(1, 31);
+  return { q: `0b${num.toString(2).padStart(5, '0')} (Decimal) = ?`, ans: String(num) };
+}
+function genCustomBases_Dec2Bin() {
+  const num = getRandomInt(1, 31);
+  const b = num.toString(2);
+  return { q: `${num} (Binary) = 0b?`, ans: b, altAns: '0b' + b };
+}
+function genCustomBases_Hex() {
+  const num = getRandomInt(5, 255);
+  return { q: `0x${num.toString(16).toUpperCase()} (Decimal) = ?`, ans: String(num) };
+}
+function genCustomBases_Dec2Hex() {
+  const num = getRandomInt(5, 255);
+  const h = num.toString(16).toUpperCase();
+  return { q: `${num} (Hexadecimal) = 0x?`, ans: h, altAns: '0x' + h };
+}
+function genCustomBases_Oct() {
+  const num = getRandomInt(5, 63);
+  return { q: `0o${num.toString(8)} (Decimal) = ?`, ans: String(num) };
+}
+function genCustomBases_Dec2Oct() {
+  const num = getRandomInt(5, 63);
+  const o = num.toString(8);
+  return { q: `${num} (Octal) = 0o?`, ans: o, altAns: '0o' + o };
+}
+
+// GENERAL MATH TRIVIA GENERATOR
+function genCustomMathTrivia() {
+  const angleItems = [
+    { q: 'Üçgenin iç açıları toplamı kaç derecedir = ?', ans: 180 },
+    { q: 'Dörtgenin iç açıları toplamı kaç derecedir = ?', ans: 360 },
+    { q: 'Beşgenin iç açıları toplamı kaç derecedir = ?', ans: 540 },
+    { q: 'Altıgenin iç açıları toplamı kaç derecedir = ?', ans: 720 },
+    { q: 'Bir doğru açının ölçüsü kaç derecedir = ?', ans: 180 },
+    { q: 'Bir tam açının ölçüsü kaç derecedir = ?', ans: 360 },
+    { q: 'Dik açının ölçüsü kaç derecedir = ?', ans: 90 }
+  ];
+
+  const primeItems = [
+    { q: 'En küçük asal sayı kaçtır = ?', ans: 2 },
+    { q: 'Çift olan tek asal sayı kaçtır = ?', ans: 2 },
+    { q: '10\'dan küçük kaç tane asal sayı vardır = ?', ans: 4 },
+    { q: '20\'den küçük kaç tane asal sayı vardır = ?', ans: 8 },
+    { q: '100\'e kadar toplam kaç tane asal sayı vardır = ?', ans: 25 },
+    { q: 'En küçük mükemmel sayı kaçtır (1+2+3) = ?', ans: 6 },
+    { q: 'İkinci mükemmel sayı kaçtır (1+2+4+7+14) = ?', ans: 28 }
+  ];
+
+  const coreRuleItems = [
+    { q: 'Sıfırdan farklı her sayının 0. kuvveti (x⁰) kaçtır = ?', ans: 1 },
+    { q: '0! (Sıfır faktöriyel) değeri kaçtır = ?', ans: 1 },
+    { q: 'Bir sayının kendisi ile bölümü (x / x) kaçtır = ?', ans: 1 }
+  ];
+
+  if (state.triviaModeType === 'angles') {
+    return angleItems[Math.floor(Math.random() * angleItems.length)];
+  } else if (state.triviaModeType === 'primes') {
+    return primeItems[Math.floor(Math.random() * primeItems.length)];
+  } else {
+    const all = [...angleItems, ...primeItems, ...coreRuleItems];
+    return all[Math.floor(Math.random() * all.length)];
+  }
+}
+
+// LOGARITHM GENERATOR
+function genCustomLogarithm() {
+  const base23Items = [
+    { q: 'log₂(2) = ?', ans: 1 },
+    { q: 'log₂(4) = ?', ans: 2 },
+    { q: 'log₂(8) = ?', ans: 3 },
+    { q: 'log₂(16) = ?', ans: 4 },
+    { q: 'log₂(32) = ?', ans: 5 },
+    { q: 'log₂(64) = ?', ans: 6 },
+    { q: 'log₃(3) = ?', ans: 1 },
+    { q: 'log₃(9) = ?', ans: 2 },
+    { q: 'log₃(27) = ?', ans: 3 },
+    { q: 'log₃(81) = ?', ans: 4 },
+    { q: 'log₅(25) = ?', ans: 2 },
+    { q: 'log₅(125) = ?', ans: 3 }
+  ];
+
+  const base10Items = [
+    { q: 'log(10) = ?', ans: 1 },
+    { q: 'log(100) = ?', ans: 2 },
+    { q: 'log(1000) = ?', ans: 3 },
+    { q: 'log(10000) = ?', ans: 4 },
+    { q: 'log(100000) = ?', ans: 5 }
+  ];
+
+  const ruleItems = [
+    { q: 'log₇(7) = ?', ans: 1 },
+    { q: 'log₉(1) = ?', ans: 0 },
+    { q: 'log₅(1) = ?', ans: 0 },
+    { q: 'log₂(8) + log₃(9) = ?', ans: 5 },
+    { q: 'log₂(16) - log₂(4) = ?', ans: 2 },
+    { q: 'log(100) × log₂(8) = ?', ans: 6 }
+  ];
+
+  if (state.logModeType === '23') {
+    return base23Items[Math.floor(Math.random() * base23Items.length)];
+  } else if (state.logModeType === '10') {
+    return base10Items[Math.floor(Math.random() * base10Items.length)];
+  } else if (state.logModeType === 'rule') {
+    return ruleItems[Math.floor(Math.random() * ruleItems.length)];
+  } else {
+    const all = [...base23Items, ...base10Items, ...ruleItems];
+    return all[Math.floor(Math.random() * all.length)];
+  }
+}
+
+// YÜZDE VE ORAN MOTORU
+function genCustomPercentage() {
+  const basicPcts = [10, 20, 25, 50];
+  const advPcts = [15, 30, 40, 75, 150];
+  let p = 25;
+  if (state.pctModeType === 'basic') {
+    p = basicPcts[Math.floor(Math.random() * basicPcts.length)];
+  } else if (state.pctModeType === 'adv') {
+    p = advPcts[Math.floor(Math.random() * advPcts.length)];
+  } else {
+    const all = [...basicPcts, ...advPcts];
+    p = all[Math.floor(Math.random() * all.length)];
+  }
+
+  let baseMultiplier = getRandomInt(1, 20);
+  let baseNum = (100 / gcd(p, 100)) * baseMultiplier * getRandomInt(1, 4);
+
+  const ans = (baseNum * p) / 100;
+  return {
+    q: `${baseNum}'in %${p}'i kaçtır = ?`,
+    ans: ans
+  };
+}
+
+function gcd(a, b) {
+  return b === 0 ? a : gcd(b, a % b);
+}
+
+// GEOMETRİ & ÖZEL ÜÇGENLER MOTORU
+function genCustomGeometry() {
+  if (state.geomModeType === 'pyth') {
+    const triples = [
+      { a: 3, b: 4, c: 5 },
+      { a: 6, b: 8, c: 10 },
+      { a: 9, b: 12, c: 15 },
+      { a: 12, b: 16, c: 20 },
+      { a: 5, b: 12, c: 13 },
+      { a: 10, b: 24, c: 26 },
+      { a: 8, b: 15, c: 17 },
+      { a: 7, b: 24, c: 25 }
+    ];
+    const t = triples[Math.floor(Math.random() * triples.length)];
+    return {
+      q: `Dik kenarları ${t.a} ve ${t.b} olan dik üçgenin hipotenüsü = ?`,
+      ans: t.c
+    };
+  } else if (state.geomModeType === 'area') {
+    const isSquare = Math.random() > 0.5;
+    if (isSquare) {
+      const side = getRandomInt(3, 15);
+      const isArea = Math.random() > 0.5;
+      if (isArea) {
+        return { q: `Bir kenarı ${side} cm olan karenin Alanı = ? cm²`, ans: side * side };
+      } else {
+        return { q: `Bir kenarı ${side} cm olan karenin Çevresi = ? cm`, ans: side * 4 };
+      }
+    } else {
+      const w = getRandomInt(3, 12);
+      const h = getRandomInt(4, 15);
+      const isArea = Math.random() > 0.5;
+      if (isArea) {
+        return { q: `Kenarları ${w} ve ${h} cm olan dikdörtgenin Alanı = ? cm²`, ans: w * h };
+      } else {
+        return { q: `Kenarları ${w} ve ${h} cm olan dikdörtgenin Çevresi = ? cm`, ans: 2 * (w + h) };
+      }
+    }
+  } else {
+    return Math.random() > 0.5 ? genCustomGeometry('pyth') : genCustomGeometry('area');
+  }
+}
+
+// FAKTÖRİYEL MOTORU
+function genCustomFactorial() {
+  const factMap = { 0: 1, 1: 1, 2: 2, 3: 6, 4: 24, 5: 120, 6: 720 };
+  if (state.factModeType === 'basic') {
+    const n = getRandomInt(1, 6);
+    return { q: `${n}! = ?`, ans: factMap[n] };
+  } else if (state.factModeType === 'ratio') {
+    const n = getRandomInt(3, 6);
+    const k = getRandomInt(1, n - 1);
+    const ans = factMap[n] / factMap[k];
+    return { q: `${n}! / ${k}! = ?`, ans: ans };
+  } else {
+    const n = getRandomInt(2, 5);
+    const isAdd = Math.random() > 0.5;
+    const ans = isAdd ? (factMap[n] + factMap[n-1]) : (factMap[n] - factMap[n-1]);
+    return { q: `${n}! ${isAdd ? '+' : '-'} ${n-1}! = ?`, ans: ans };
+  }
+}
+
+// SİBER GÜNLÜK MÜCADELE MOTORU (DAILY BOSS)
+function getTodayDateString() {
+  const d = new Date();
+  return d.toISOString().split('T')[0];
+}
+
+function generateDailyQuestions() {
+  const dateStr = getTodayDateString();
+  state.dailyState.dateStr = dateStr;
+
+  let seed = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    seed += dateStr.charCodeAt(i);
+  }
+
+  const questions = [];
+  const pool = [genLevel1, genLevel2, genLevel3, genCustomExponents, genCustomSquareRoots, genCustomLogarithm, genCustomBases, genCustomMathTrivia, genCustomPercentage, genCustomGeometry, genCustomFactorial, genCustomTrigonometry];
+
+  for (let i = 0; i < 10; i++) {
+    const genFunc = pool[(seed + i * 7) % pool.length];
+    const qItem = genFunc();
+    qItem.q = `[GÜNLÜK GÖREV ${i+1}/10] ` + qItem.q;
+    questions.push(qItem);
+  }
+
+  state.dailyState.questions = questions;
+}
+
+// TRIGONOMETRY GENERATOR
 function genCustomTrigonometry() {
   const basicQuestions = [
     { q: 'sin(0°) = ?', ans: 0 },
-    { q: 'sin(30°) = ? (Ondalık veya kesir: 0.5)', ans: 0.5 },
+    { q: 'sin(30°) = ? (Ondalık: 0.5)', ans: 0.5 },
     { q: 'sin(90°) = ?', ans: 1 },
     { q: 'cos(0°) = ?', ans: 1 },
     { q: 'cos(60°) = ? (Ondalık: 0.5)', ans: 0.5 },
@@ -637,6 +929,7 @@ const matrixToggleBtn = document.getElementById('matrix-toggle-btn');
 const statsBtn = document.getElementById('stats-btn');
 const modeBtn = document.getElementById('mode-btn');
 const docsBtn = document.getElementById('docs-btn');
+const dailyBtn = document.getElementById('daily-btn');
 
 const levelBadge = document.getElementById('level-badge');
 const levelTitle = document.getElementById('level-title');
@@ -670,6 +963,13 @@ const levelupLevelTitle = document.getElementById('levelup-level-title');
 const levelupDesc = document.getElementById('levelup-desc');
 const nextLevelBtn = document.getElementById('next-level-btn');
 
+const dailyModal = document.getElementById('daily-modal');
+const closeDailyBtn = document.getElementById('close-daily-btn');
+const startDailyBtn = document.getElementById('start-daily-btn');
+const dailyDateTitle = document.getElementById('daily-date-title');
+const dailyStatusText = document.getElementById('daily-status-text');
+const dailyBestScore = document.getElementById('daily-best-score');
+
 const timeupModal = document.getElementById('timeup-modal');
 const timeupSolvedCount = document.getElementById('timeup-solved-count');
 const timeupFinalScore = document.getElementById('timeup-final-score');
@@ -679,7 +979,7 @@ const hackerTimerCheckbox = document.getElementById('hacker-timer-checkbox');
 
 function loadSavedData() {
   try {
-    const saved = localStorage.getItem('MATH_DECIPHER_SAVE_v2');
+    const saved = localStorage.getItem('MATH_DECIPHER_SAVE_v3');
     if (saved) {
       const parsed = JSON.parse(saved);
       state.highScore = parsed.highScore || 0;
@@ -688,6 +988,9 @@ function loadSavedData() {
       state.totalAttempts = parsed.totalAttempts || 0;
       state.bestStreak = parsed.bestStreak || 0;
       state.badges = parsed.badges || [];
+      if (parsed.dailyState && parsed.dailyState.dateStr === getTodayDateString()) {
+        state.dailyState = parsed.dailyState;
+      }
     }
   } catch (e) {
     console.error('Save loading error:', e);
@@ -702,9 +1005,10 @@ function saveData() {
       totalSolved: state.totalSolved,
       totalAttempts: state.totalAttempts,
       bestStreak: state.bestStreak,
-      badges: state.badges
+      badges: state.badges,
+      dailyState: state.dailyState
     };
-    localStorage.setItem('MATH_DECIPHER_SAVE_v2', JSON.stringify(toSave));
+    localStorage.setItem('MATH_DECIPHER_SAVE_v3', JSON.stringify(toSave));
   } catch (e) {
     console.error('Save writing error:', e);
   }
@@ -712,6 +1016,7 @@ function saveData() {
 
 function initApp() {
   loadSavedData();
+  generateDailyQuestions();
   resizeMatrix();
   window.addEventListener('resize', resizeMatrix);
 
@@ -737,6 +1042,10 @@ function initApp() {
   docsBtn.addEventListener('click', openDocsModal);
   closeDocsBtn.addEventListener('click', closeDocsModal);
 
+  if (dailyBtn) dailyBtn.addEventListener('click', openDailyModal);
+  if (closeDailyBtn) closeDailyBtn.addEventListener('click', closeDailyModal);
+  if (startDailyBtn) startDailyBtn.addEventListener('click', startDailyChallengeRun);
+
   nextLevelBtn.addEventListener('click', closeLevelupModal);
   if (restartTimerBtn) restartTimerBtn.addEventListener('click', restartHackerTimerRun);
 
@@ -753,6 +1062,7 @@ function initApp() {
       closeStatsModal();
       closeModeModal();
       closeDocsModal();
+      closeDailyModal();
       closeLevelupModal();
       if (timeupModal) timeupModal.classList.add('hidden');
     }
@@ -764,6 +1074,38 @@ function initApp() {
 function updateClock() {
   const d = new Date();
   logClock.textContent = d.toTimeString().split(' ')[0];
+}
+
+// DAILY CHALLENGE MODAL LOGIC
+function openDailyModal() {
+  playKeySound();
+  dailyDateTitle.textContent = `TARIH: ${getTodayDateString()}`;
+  if (state.dailyState.completed) {
+    dailyStatusText.textContent = '✅ BUGÜNKÜ GÖREV TAMAMLANTI!';
+    dailyStatusText.className = 'text-green';
+    startDailyBtn.textContent = '🔄 RE-PLAY GÜNLÜK MÜCADELE';
+  } else {
+    dailyStatusText.textContent = '⏳ TAMAMLATILMADI (10/10 GÖREV)';
+    dailyStatusText.className = 'text-gold';
+    startDailyBtn.textContent = '🚀 GÜNLÜK MÜCADELEYİ BAŞLAT (10 SORU)';
+  }
+  dailyBestScore.textContent = `${state.dailyState.bestScore} PTS`;
+  dailyModal.classList.remove('hidden');
+}
+
+function closeDailyModal() {
+  playKeySound();
+  dailyModal.classList.add('hidden');
+}
+
+function startDailyChallengeRun() {
+  playKeySound();
+  closeDailyModal();
+  state.activeMode = 'DAILY_CHALLENGE';
+  state.dailyState.currentIndex = 0;
+  addLog(`[MOD] 🏆 Günlük Siber Mücadele Başlatıldı! (10 Soru)`, 'levelup');
+  updateHUD();
+  loadQuestion();
 }
 
 // HACKER TIMER LOGIC
@@ -831,6 +1173,91 @@ function updateHUD() {
     levelProgressText.textContent = `ÇÖZÜLEN: ${state.levelSolvedCount} / ${level.required}`;
     const pct = Math.min(100, (state.levelSolvedCount / level.required) * 100);
     levelProgressFill.style.width = `${pct}%`;
+  } else if (state.activeMode === 'DAILY_CHALLENGE') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: GÜNLÜK MÜCADELE`;
+    levelTitle.textContent = `🏆 GÜNLÜK SİBER GÖREV (${state.dailyState.currentIndex + 1} / 10)${timerTag}`;
+    levelSub.textContent = `Bugünün özel 10 soruluk siber görev pakedi. 10/10 yaparak liderliğe tırman!`;
+    modeStatusIndicator.textContent = `● GÜNLÜK MÜCADELE: [${state.dailyState.currentIndex + 1}/10]${timerTag}`;
+
+    levelProgressText.textContent = `GÖREV: ${state.dailyState.currentIndex + 1} / 10`;
+    const pct = Math.min(100, (state.dailyState.currentIndex / 10) * 100);
+    levelProgressFill.style.width = `${pct}%`;
+  } else if (state.activeMode === 'COMPUTER_BASES') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: SAYI SİSTEMLERİ`;
+
+    let typeTitle = 'Binary ➔ Onluk';
+    if (state.basesModeType === 'dec2bin') typeTitle = 'Onluk ➔ Binary';
+    if (state.basesModeType === 'hex') typeTitle = 'Hexadecimal ➔ Onluk';
+    if (state.basesModeType === 'dec2hex') typeTitle = 'Onluk ➔ Hexadecimal';
+    if (state.basesModeType === 'oct') typeTitle = 'Octal ➔ Onluk';
+    if (state.basesModeType === 'dec2oct') typeTitle = 'Onluk ➔ Octal';
+    if (state.basesModeType === 'add') typeTitle = 'Hex & Binary Toplama';
+    if (state.basesModeType === 'mix') typeTitle = '🔥 Karışık Siber Dönüşüm';
+
+    levelTitle.textContent = `💾 SAYI SİSTEMLERİ DÖNÜŞÜMÜ (${typeTitle})${timerTag}`;
+    levelSub.textContent = `Binary, Hexadecimal, Octal ve Onluk (Decimal) çift yönlü dönüştürme modu.`;
+    modeStatusIndicator.textContent = `● SAYI SİSTEMLERİ: (${typeTitle})${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'MATH_TRIVIA') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: MATEMATİK EZBERİ`;
+
+    let typeTitle = 'Açı & Sabit Ezberi';
+    if (state.triviaModeType === 'primes') typeTitle = 'Asal & Mükemmel Sayılar';
+    if (state.triviaModeType === 'mix') typeTitle = '🔥 Karışık Ezber Testi';
+
+    levelTitle.textContent = `🧠 GENEL MATEMATİK EZBERİ (${typeTitle})${timerTag}`;
+    levelSub.textContent = `Matematiksel sabitler, açılar ve asal sayı bilgisi ezberleştirme modu.`;
+    modeStatusIndicator.textContent = `● MATEMATİK EZBERİ: (${typeTitle})${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'LOGARITHM') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: LOGARİTMA`;
+
+    let typeTitle = '2 ve 3 Tabanlı';
+    if (state.logModeType === '10') typeTitle = 'Onluk Taban (log₁₀)';
+    if (state.logModeType === 'rule') typeTitle = 'Özdeşlik Kuralları';
+    if (state.logModeType === 'mix') typeTitle = '🔥 Karışık Logaritma';
+
+    levelTitle.textContent = `🪵 LOGARİTMA HESAPLAMA (${typeTitle})${timerTag}`;
+    levelSub.textContent = `Zihinsel logaritma ve taban kuvveti bulma alıştırma modu.`;
+    modeStatusIndicator.textContent = `● LOGARİTMA MODU: (${typeTitle})${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'PERCENTAGE') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: YÜZDE HESABI`;
+    levelTitle.textContent = `📊 YÜZDE VE ORAN HESAPLAMA${timerTag}`;
+    levelSub.textContent = `Zihinsel yüzde alma ve pratik oran hesaplama alıştırma modu.`;
+    modeStatusIndicator.textContent = `● YÜZDE HESAPLAMA MODU${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'GEOMETRY') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: GEOMETRİ`;
+    levelTitle.textContent = `📏 GEOMETRİ & ÖZEL ÜÇGENLER${timerTag}`;
+    levelSub.textContent = `Zihinsel 3-4-5 dik üçgen hipotenüsü, kare/dikdörtgen alan ve çevre modu.`;
+    modeStatusIndicator.textContent = `● GEOMETRİ VE ALAN HESABI${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'FACTORIAL') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: FAKTÖRİYEL`;
+    levelTitle.textContent = `🎲 FAKTÖRİYEL HESAPLAMA (n!)${timerTag}`;
+    levelSub.textContent = `Faktöriyel değerleri ve sadeleştirmeli bölme hesabı modu.`;
+    modeStatusIndicator.textContent = `● FAKTÖRİYEL VE ORANLAR${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
   } else if (state.activeMode === 'MULTIPLICATION_TABLE') {
     campaignLevelNav.style.display = 'none';
     levelBadge.textContent = `MODE: ÇARPIM TABLOSU`;
@@ -1009,6 +1436,29 @@ function loadQuestion() {
   if (state.activeMode === 'CAMPAIGN') {
     const lvlConfig = LEVELS[state.currentLevelIndex];
     state.currentQuestion = lvlConfig.gen();
+  } else if (state.activeMode === 'DAILY_CHALLENGE') {
+    if (state.dailyState.currentIndex < state.dailyState.questions.length) {
+      state.currentQuestion = state.dailyState.questions[state.dailyState.currentIndex];
+    } else {
+      state.dailyState.completed = true;
+      if (state.score > state.dailyState.bestScore) state.dailyState.bestScore = state.score;
+      saveData();
+      addLog(`[GÜNLÜK GÖREV] TEBRİKLER! Bugünü 10/10 Tamamladınız! Skor: ${state.score}`, 'levelup');
+      openDailyModal();
+      return;
+    }
+  } else if (state.activeMode === 'COMPUTER_BASES') {
+    state.currentQuestion = genCustomBases();
+  } else if (state.activeMode === 'MATH_TRIVIA') {
+    state.currentQuestion = genCustomMathTrivia();
+  } else if (state.activeMode === 'LOGARITHM') {
+    state.currentQuestion = genCustomLogarithm();
+  } else if (state.activeMode === 'PERCENTAGE') {
+    state.currentQuestion = genCustomPercentage();
+  } else if (state.activeMode === 'GEOMETRY') {
+    state.currentQuestion = genCustomGeometry();
+  } else if (state.activeMode === 'FACTORIAL') {
+    state.currentQuestion = genCustomFactorial();
   } else if (state.activeMode === 'MULTIPLICATION_TABLE') {
     state.currentQuestion = genCustomMultiplicationTable();
   } else if (state.activeMode === 'MULTIPLICATION_OP') {
@@ -1052,14 +1502,15 @@ function loadQuestion() {
 
 function handleAnswerSubmit(e) {
   e.preventDefault();
-  const val = answerInput.value.trim();
+  const val = answerInput.value.trim().toLowerCase();
   if (val === '') return;
 
   state.totalAttempts++;
   const userAns = val;
-  const targetAns = String(state.currentQuestion.ans).trim();
+  const targetAns = String(state.currentQuestion.ans).trim().toLowerCase();
+  const altAns = state.currentQuestion.altAns ? String(state.currentQuestion.altAns).trim().toLowerCase() : null;
 
-  if (userAns.toLowerCase() === targetAns.toLowerCase()) {
+  if (userAns === targetAns || (altAns && userAns === altAns)) {
     handleCorrectAnswer();
   } else {
     handleWrongAnswer(userAns, targetAns);
@@ -1093,7 +1544,10 @@ function handleCorrectAnswer() {
   checkBadges();
   saveData();
 
-  if (state.activeMode === 'CAMPAIGN') {
+  if (state.activeMode === 'DAILY_CHALLENGE') {
+    state.dailyState.currentIndex++;
+    setTimeout(loadQuestion, 350);
+  } else if (state.activeMode === 'CAMPAIGN') {
     const currentLvlConfig = LEVELS[state.currentLevelIndex];
     if (state.levelSolvedCount >= currentLvlConfig.required) {
       if (state.currentLevelIndex < LEVELS.length - 1) {
@@ -1281,6 +1735,24 @@ function initModeModalEvents() {
     });
   });
 
+  // Computer Number Systems Preset Buttons (ONLUK TABAN DAHİL)
+  document.querySelectorAll('.preset-btn[data-type^="bases-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const basesKind = type.replace('bases-', '');
+      state.activeMode = 'COMPUTER_BASES';
+      state.basesModeType = basesKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Sayı Sistemleri Modu (${basesKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
   // Exponents Preset Buttons
   document.querySelectorAll('.preset-btn[data-type^="exp-"]').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -1317,7 +1789,97 @@ function initModeModalEvents() {
     });
   });
 
-  // Trigonometry Preset Buttons (YENİ TRİGONOMETRİ BUTON DİNLEYİCİSİ)
+  // Logarithm Preset Buttons
+  document.querySelectorAll('.preset-btn[data-type^="log-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const logKind = type.replace('log-', '');
+      state.activeMode = 'LOGARITHM';
+      state.logModeType = logKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Logaritma Modu (${logKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
+  // General Math Trivia Preset Buttons
+  document.querySelectorAll('.preset-btn[data-type^="trivia-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const triviaKind = type.replace('trivia-', '');
+      state.activeMode = 'MATH_TRIVIA';
+      state.triviaModeType = triviaKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Matematik Ezberi Modu (${triviaKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
+  // Percentage Preset Buttons
+  document.querySelectorAll('.preset-btn[data-type^="pct-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const pctKind = type.replace('pct-', '');
+      state.activeMode = 'PERCENTAGE';
+      state.pctModeType = pctKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Yüzde Hesabı Modu (${pctKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
+  // Geometry Preset Buttons
+  document.querySelectorAll('.preset-btn[data-type^="geom-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const geomKind = type.replace('geom-', '');
+      state.activeMode = 'GEOMETRY';
+      state.geomModeType = geomKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Geometri Modu (${geomKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
+  // Factorial Preset Buttons
+  document.querySelectorAll('.preset-btn[data-type^="fact-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const factKind = type.replace('fact-', '');
+      state.activeMode = 'FACTORIAL';
+      state.factModeType = factKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Faktöriyel Modu (${factKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
+  // Trigonometry Preset Buttons
   document.querySelectorAll('.preset-btn[data-type^="trigo-"]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       playKeySound();
