@@ -344,14 +344,14 @@
           </div>
         </div>
 
-        <!-- TAB 5: TRIGONOMETRY MODES (YENİ TRİGONOMETRİ MODU) -->
+        <!-- TAB 5: TRIGONOMETRY MODES -->
         <div id="trigo-tab" class="tab-content">
           <div class="direct-range-card">
             <h4 class="section-title">📐 TRİGONOMETRİK EZBER MODU SEÇİN</h4>
             <div class="preset-grid add-preset-grid">
               <button class="preset-btn gold-glow-btn" data-type="trigo-basic">
                 <span class="preset-title">📐 Temel Açılar (0°, 30°, 45°, 60°, 90°)</span>
-                <span class="preset-sub">sin(30°)=0.5, cos(60°)=0.5, sin(90°)=1, cos(0°)=1</span>
+                <span class="preset-sub">sin(30°)=0.5, cos(60°)=0.5, tan(45°)=1, cot(45°)=1</span>
               </button>
               <button class="preset-btn" data-type="trigo-quad">
                 <span class="preset-title">🧭 Eksen Açıları (180°, 270°, 360°)</span>
@@ -504,31 +504,34 @@
           </div>
         </div>
 
-        <!-- DOCS TAB TRİGONOMETRİ: TRIGONOMETRY SHORTCUTS -->
+        <!-- DOCS TAB TRİGONOMETRİ: TRIGONOMETRY SHORTCUTS & FULL EZBER CETVELİ -->
         <div id="doc-trigo" class="docs-tab-content">
           <div class="shortcut-card extreme-border">
             <div class="shortcut-header">
               <span class="shortcut-num badge-red">TRİGO 01</span>
-              <h4>Temel Açılar Ezber Cetveli (0° - 90°)</h4>
+              <h4>Eksiksiz Özel Açılar Ezber Cetveli (0° - 360°)</h4>
             </div>
-            <p class="shortcut-desc">Ezberlenmesi gereken temel trigonometrik açı değerleri:</p>
+            <p class="shortcut-desc">Oyundaki tüm Trigonometri ezber sorularının tam cevap anahtarı:</p>
             <div class="example-box">
-              <span class="ex-step">🔹 \(\sin(0^\circ) = 0\) | \(\sin(30^\circ) = 0.5\) | \(\sin(90^\circ) = 1\)</span>
+              <span class="ex-title">📌 0°, 30°, 45°, 60°, 90° Temel Değerler:</span>
+              <span class="ex-step">🔹 \(\sin(0^\circ) = 0\) | \(\sin(30^\circ) = 0.5\) | \(\sin(45^\circ) \approx 0.707\) | \(\sin(90^\circ) = 1\)</span>
               <span class="ex-step">🔹 \(\cos(0^\circ) = 1\) | \(\cos(60^\circ) = 0.5\) | \(\cos(90^\circ) = 0\)</span>
-              <span class="ex-step">🔹 \(\tan(45^\circ) = 1\) | \(\cos(180^\circ) = -1\) | \(\sin(270^\circ) = -1\)</span>
-              <span class="ex-result">Kısayol: \(\sin(x) = \cos(90^\circ - x)\) ➔ Tümler açılar eşittir!</span>
+              <span class="ex-step">🔹 \(\tan(45^\circ) = 1\) | <strong class="text-gold">\(\cot(45^\circ) = 1\)</strong> | \(\tan(0^\circ) = 0\)</span>
+              <span class="ex-step">🔹 \(\sin(45^\circ) \times \cos(45^\circ) = 0.5\)</span>
             </div>
-          </div>
 
-          <div class="shortcut-card">
-            <div class="shortcut-header">
-              <span class="shortcut-num">TRİGO 02</span>
-              <h4>Altın Özdeşlikler</h4>
+            <div class="example-box" style="margin-top: 0.5rem;">
+              <span class="ex-title">📌 Eksen Açıları (180°, 270°, 360°):</span>
+              <span class="ex-step">🔹 \(\sin(180^\circ) = 0\) | \(\cos(180^\circ) = -1\) | \(\tan(180^\circ) = 0\)</span>
+              <span class="ex-step">🔹 \(\sin(270^\circ) = -1\) | \(\cos(270^\circ) = 0\)</span>
+              <span class="ex-step">🔹 \(\sin(360^\circ) = 0\) | \(\cos(360^\circ) = 1\)</span>
             </div>
-            <div class="example-box">
+
+            <div class="example-box" style="margin-top: 0.5rem;">
+              <span class="ex-title">📌 Trigonometrik Özdeşlikler:</span>
               <span class="ex-step">1) \(\sin^2(x) + \cos^2(x) = 1\)</span>
               <span class="ex-step">2) \(\tan(x) \cdot \cot(x) = 1\)</span>
-              <span class="ex-result">Sonuç: Her zaman <strong class="text-gold">1</strong> olur!</span>
+              <span class="ex-step">3) Tümler Açı: \(\sin(60^\circ) = \cos(30^\circ)\), \(\cos(40^\circ) = \sin(50^\circ)\)</span>
             </div>
           </div>
         </div>

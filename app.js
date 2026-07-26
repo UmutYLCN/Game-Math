@@ -1,5 +1,5 @@
 /**
- * MATH_DECIPHER // Core Game Engine v4.5 (Square Roots & KaTeX Powered Renderer)
+ * MATH_DECIPHER // Core Game Engine v5.0 (Trigonometry & KaTeX Powered Renderer)
  * Cyber Math Decryption Game
  */
 
@@ -100,14 +100,15 @@ const BADGES = [
 
 // App State
 let state = {
-  activeMode: 'CAMPAIGN', // 'CAMPAIGN' | 'MULTIPLICATION_TABLE' | 'MULTIPLICATION_OP' | 'EXPONENTS' | 'SQUARE_ROOTS' | 'ADDITION' | 'SUBTRACTION' | 'DIVISION'
+  activeMode: 'CAMPAIGN', // 'CAMPAIGN' | 'MULTIPLICATION_TABLE' | 'MULTIPLICATION_OP' | 'EXPONENTS' | 'SQUARE_ROOTS' | 'TRIGONOMETRY' | 'ADDITION' | 'SUBTRACTION' | 'DIVISION'
   
   multMin: 1,
   multMax: 10,
 
   multOpModeType: 'rr',
   expModeType: '2n',
-  rootModeType: 'basic', // 'basic' | 'addsub' | 'mult' | 'mix'
+  rootModeType: 'basic',
+  trigoModeType: 'basic', // 'basic' | 'quad' | 'ident' | 'mix'
   addModeType: 'rr',
   subModeType: 'rr',
   divModeType: 'basit',
@@ -260,21 +261,63 @@ function drawMatrix() {
 }
 
 // ==========================================
-// 5. QUESTION GENERATORS (SQUARE ROOTS INCLUDED)
+// 5. QUESTION GENERATORS (TRIGONOMETRY INCLUDED)
 // ==========================================
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// SQUARE ROOTS GENERATOR (YENİ KAREKÖK İFADELER MOTORU)
+// TRIGONOMETRY GENERATOR (YENİ TRİGONOMETRİ MOTORU)
+function genCustomTrigonometry() {
+  const basicQuestions = [
+    { q: 'sin(0°) = ?', ans: 0 },
+    { q: 'sin(30°) = ? (Ondalık veya kesir: 0.5)', ans: 0.5 },
+    { q: 'sin(90°) = ?', ans: 1 },
+    { q: 'cos(0°) = ?', ans: 1 },
+    { q: 'cos(60°) = ? (Ondalık: 0.5)', ans: 0.5 },
+    { q: 'cos(90°) = ?', ans: 0 },
+    { q: 'tan(45°) = ?', ans: 1 },
+    { q: 'cot(45°) = ?', ans: 1 },
+    { q: 'sin(45°) × cos(45°) = ? (0.5)', ans: 0.5 }
+  ];
+
+  const quadQuestions = [
+    { q: 'sin(180°) = ?', ans: 0 },
+    { q: 'cos(180°) = ?', ans: -1 },
+    { q: 'sin(270°) = ?', ans: -1 },
+    { q: 'cos(270°) = ?', ans: 0 },
+    { q: 'cos(360°) = ?', ans: 1 },
+    { q: 'sin(360°) = ?', ans: 0 },
+    { q: 'tan(180°) = ?', ans: 0 }
+  ];
+
+  const identQuestions = [
+    { q: 'sin²(x) + cos²(x) = ?', ans: 1 },
+    { q: 'tan(x) × cot(x) = ?', ans: 1 },
+    { q: 'sin(60°) = cos(x°) ➔ x = ?', ans: 30 },
+    { q: 'cos(40°) = sin(x°) ➔ x = ?', ans: 50 },
+    { q: 'sin²(45°) + cos²(45°) = ?', ans: 1 }
+  ];
+
+  if (state.trigoModeType === 'basic') {
+    return basicQuestions[Math.floor(Math.random() * basicQuestions.length)];
+  } else if (state.trigoModeType === 'quad') {
+    return quadQuestions[Math.floor(Math.random() * quadQuestions.length)];
+  } else if (state.trigoModeType === 'ident') {
+    return identQuestions[Math.floor(Math.random() * identQuestions.length)];
+  } else {
+    const all = [...basicQuestions, ...quadQuestions, ...identQuestions];
+    return all[Math.floor(Math.random() * all.length)];
+  }
+}
+
+// SQUARE ROOTS GENERATOR
 function genCustomSquareRoots() {
   if (state.rootModeType === 'basic') {
-    // Tam Kare Kökler (√1 - √625)
     const root = getRandomInt(2, 25);
     const sq = root * root;
     return { q: `√${sq} = ?`, ans: root };
   } else if (state.rootModeType === 'addsub') {
-    // Köklü Toplama / Çıkarma (√36 + √64 = 14)
     const r1 = getRandomInt(2, 15);
     const r2 = getRandomInt(2, 15);
     const isAdd = Math.random() > 0.4;
@@ -288,23 +331,10 @@ function genCustomSquareRoots() {
       ans: isAdd ? (r1 + r2) : (r1 - r2)
     };
   } else if (state.rootModeType === 'mult') {
-    // Köklü Çarpma (√4 × √9 = 6 veya √2 × √8 = 4)
-    if (Math.random() > 0.5) {
-      const r1 = getRandomInt(2, 10);
-      const r2 = getRandomInt(2, 10);
-      return { q: `√${r1*r1} × √${r2*r2} = ?`, ans: r1 * r2 };
-    } else {
-      const k = getRandomInt(2, 6);
-      const m = getRandomInt(2, 5);
-      const val1 = k * m;
-      const val2 = k * m * m; // val1 * val2 = k^2 * m^3... wait, let's keep integer root
-      const a = getRandomInt(2, 8);
-      const b = getRandomInt(2, 8);
-      const product = a * a * b * b;
-      return { q: `√${a*a} × √${b*b} = ?`, ans: a * b };
-    }
+    const a = getRandomInt(2, 8);
+    const b = getRandomInt(2, 8);
+    return { q: `√${a*a} × √${b*b} = ?`, ans: a * b };
   } else {
-    // Karışık Karekök
     const r = getRandomInt(3, 30);
     return { q: `√${r * r} = ?`, ans: r };
   }
@@ -861,6 +891,21 @@ function updateHUD() {
 
     levelProgressText.textContent = `SERİ: ${state.streak}`;
     levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'TRIGONOMETRY') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: TRİGONOMETRİ`;
+
+    let typeTitle = 'Temel Açılar';
+    if (state.trigoModeType === 'quad') typeTitle = 'Eksen Açıları';
+    if (state.trigoModeType === 'ident') typeTitle = 'Özdeşlikler';
+    if (state.trigoModeType === 'mix') typeTitle = '🔥 Karışık Trigonometri';
+
+    levelTitle.textContent = `📐 TRİGONOMETRİ (${typeTitle})${timerTag}`;
+    levelSub.textContent = `Trigonometrik özel açı değerleri ve özdeşlik ezberleme modu.`;
+    modeStatusIndicator.textContent = `● TRİGONOMETRİ: (${typeTitle})${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
   } else if (state.activeMode === 'ADDITION') {
     campaignLevelNav.style.display = 'none';
     levelBadge.textContent = `MODE: TOPLAMA`;
@@ -972,6 +1017,8 @@ function loadQuestion() {
     state.currentQuestion = genCustomExponents();
   } else if (state.activeMode === 'SQUARE_ROOTS') {
     state.currentQuestion = genCustomSquareRoots();
+  } else if (state.activeMode === 'TRIGONOMETRY') {
+    state.currentQuestion = genCustomTrigonometry();
   } else if (state.activeMode === 'ADDITION') {
     state.currentQuestion = genCustomAddition();
   } else if (state.activeMode === 'SUBTRACTION') {
@@ -1252,7 +1299,7 @@ function initModeModalEvents() {
     });
   });
 
-  // Square Roots Preset Buttons (YENİ KAREKÖK BUTON DİNLEYİCİSİ)
+  // Square Roots Preset Buttons
   document.querySelectorAll('.preset-btn[data-type^="root-"]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       playKeySound();
@@ -1264,6 +1311,24 @@ function initModeModalEvents() {
       if (state.hackerTimerEnabled) startHackerTimer();
 
       addLog(`[MOD] Karekök İfadeler Modu (${rootKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
+  // Trigonometry Preset Buttons (YENİ TRİGONOMETRİ BUTON DİNLEYİCİSİ)
+  document.querySelectorAll('.preset-btn[data-type^="trigo-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const trigoKind = type.replace('trigo-', '');
+      state.activeMode = 'TRIGONOMETRY';
+      state.trigoModeType = trigoKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Trigonometri Modu (${trigoKind}) başlatıldı.`, 'info');
       updateHUD();
       loadQuestion();
       closeModeModal();
