@@ -1,5 +1,5 @@
 /**
- * MATH_DECIPHER // Core Game Engine v2.4 (Subtraction, Division & Hacker Timer Mode)
+ * MATH_DECIPHER // Core Game Engine v3.1 (Mental Math Shortcuts Docs & Academy)
  * Cyber Math Decryption Game
  */
 
@@ -100,15 +100,16 @@ const BADGES = [
 
 // App State
 let state = {
-  activeMode: 'CAMPAIGN', // 'CAMPAIGN' | 'MULTIPLICATION' | 'ADDITION' | 'SUBTRACTION' | 'DIVISION'
+  activeMode: 'CAMPAIGN', // 'CAMPAIGN' | 'MULTIPLICATION_TABLE' | 'MULTIPLICATION_OP' | 'ADDITION' | 'SUBTRACTION' | 'DIVISION'
   
   multMin: 1,
   multMax: 10,
-  addModeType: 'rr', // 'rr' | 'sr' | 'ss'
-  subModeType: 'rr', // 'rr' | 'sr' | 'ss'
-  divModeType: 'basit', // 'basit' | 'sr' | 'ss'
 
-  // Hacker Timer Option (Can be activated for ANY mode!)
+  multOpModeType: 'rr',
+  addModeType: 'rr',
+  subModeType: 'rr',
+  divModeType: 'basit',
+
   hackerTimerEnabled: false,
   timerSeconds: 60,
   timerInterval: null,
@@ -242,13 +243,52 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// MULTIPLICATION TRAINER GENERATOR
-function genCustomMultiplication() {
+// MULTIPLICATION TABLE GENERATOR
+function genCustomMultiplicationTable() {
   const min = Math.min(state.multMin, state.multMax);
   const max = Math.max(state.multMin, state.multMax);
 
   const a = getRandomInt(min, max);
   const b = getRandomInt(1, 10);
+
+  return {
+    q: `${a} × ${b} = ?`,
+    ans: a * b
+  };
+}
+
+// MULTIPLICATION OPERATION GENERATOR
+function genCustomMultiplicationOp() {
+  let a = 0, b = 0;
+  if (state.multOpModeType === 'rr') {
+    a = getRandomInt(2, 9);
+    b = getRandomInt(2, 9);
+  } else if (state.multOpModeType === 'sr') {
+    a = getRandomInt(10, 99);
+    b = getRandomInt(2, 9);
+  } else if (state.multOpModeType === 'ss') {
+    a = getRandomInt(11, 99);
+    b = getRandomInt(11, 99);
+  } else if (state.multOpModeType === '3r') {
+    a = getRandomInt(100, 999);
+    b = getRandomInt(2, 9);
+  } else if (state.multOpModeType === '3s') {
+    a = getRandomInt(100, 999);
+    b = getRandomInt(10, 99);
+  } else if (state.multOpModeType === '4r') {
+    a = getRandomInt(1000, 9999);
+    b = getRandomInt(2, 9);
+  } else if (state.multOpModeType === '4s') {
+    a = getRandomInt(1000, 9999);
+    b = getRandomInt(10, 99);
+  } else if (state.multOpModeType === '10s') {
+    const baseA = getRandomInt(2, 9);
+    const baseB = getRandomInt(2, 9);
+    const multA = Math.pow(10, getRandomInt(1, 2));
+    const multB = Math.pow(10, getRandomInt(1, 2));
+    a = baseA * multA;
+    b = baseB * multB;
+  }
 
   return {
     q: `${a} × ${b} = ?`,
@@ -265,10 +305,17 @@ function genCustomAddition() {
   } else if (state.addModeType === 'sr') {
     a = getRandomInt(10, 99);
     b = getRandomInt(1, 9);
-  } else {
+  } else if (state.addModeType === 'ss') {
     a = getRandomInt(10, 99);
     b = getRandomInt(10, 99);
+  } else if (state.addModeType === '33') {
+    a = getRandomInt(100, 999);
+    b = getRandomInt(100, 999);
+  } else if (state.addModeType === '44') {
+    a = getRandomInt(1000, 9999);
+    b = getRandomInt(1000, 9999);
   }
+
   return { q: `${a} + ${b} = ?`, ans: a + b };
 }
 
@@ -276,37 +323,45 @@ function genCustomAddition() {
 function genCustomSubtraction() {
   let a = 0, b = 0;
   if (state.subModeType === 'rr') {
-    // Rakam - Rakam (Sonuç pozitif)
     a = getRandomInt(2, 9);
     b = getRandomInt(1, a);
   } else if (state.subModeType === 'sr') {
-    // Sayı - Rakam
     a = getRandomInt(12, 99);
     b = getRandomInt(1, 9);
-  } else {
-    // Sayı - Sayı
+  } else if (state.subModeType === 'ss') {
     a = getRandomInt(20, 99);
     b = getRandomInt(10, a);
+  } else if (state.subModeType === '33') {
+    a = getRandomInt(200, 999);
+    b = getRandomInt(100, a);
+  } else if (state.subModeType === '44') {
+    a = getRandomInt(2000, 9999);
+    b = getRandomInt(1000, a);
   }
+
   return { q: `${a} - ${b} = ?`, ans: a - b };
 }
 
-// DIVISION TRAINER GENERATOR (Tam Bölme)
+// DIVISION TRAINER GENERATOR
 function genCustomDivision() {
   let quotient = 0, divisor = 0;
   if (state.divModeType === 'basit') {
-    // Basit kalansız bölme
     divisor = getRandomInt(2, 10);
     quotient = getRandomInt(1, 10);
   } else if (state.divModeType === 'sr') {
-    // Sayı / Rakam
     divisor = getRandomInt(3, 9);
     quotient = getRandomInt(10, 30);
-  } else {
-    // Sayı / Sayı
+  } else if (state.divModeType === 'ss') {
     divisor = getRandomInt(11, 25);
     quotient = getRandomInt(10, 25);
+  } else if (state.divModeType === '3s') {
+    divisor = getRandomInt(5, 35);
+    quotient = getRandomInt(10, 45);
+  } else if (state.divModeType === '4s') {
+    divisor = getRandomInt(12, 99);
+    quotient = getRandomInt(20, 99);
   }
+
   let dividend = divisor * quotient;
   return { q: `${dividend} ÷ ${divisor} = ?`, ans: quotient };
 }
@@ -441,6 +496,7 @@ const soundIcon = document.getElementById('sound-icon');
 const matrixToggleBtn = document.getElementById('matrix-toggle-btn');
 const statsBtn = document.getElementById('stats-btn');
 const modeBtn = document.getElementById('mode-btn');
+const docsBtn = document.getElementById('docs-btn');
 
 const levelBadge = document.getElementById('level-badge');
 const levelTitle = document.getElementById('level-title');
@@ -465,6 +521,8 @@ const levelButtonsContainer = document.getElementById('level-buttons-container')
 // Modals
 const modeModal = document.getElementById('mode-modal');
 const closeModeBtn = document.getElementById('close-mode-btn');
+const docsModal = document.getElementById('docs-modal');
+const closeDocsBtn = document.getElementById('close-docs-btn');
 const statsModal = document.getElementById('stats-modal');
 const closeStatsBtn = document.getElementById('close-stats-btn');
 const levelupModal = document.getElementById('levelup-modal');
@@ -523,6 +581,7 @@ function initApp() {
 
   renderLevelButtons();
   initModeModalEvents();
+  initDocsModalEvents();
 
   updateHUD();
   loadQuestion();
@@ -533,6 +592,9 @@ function initApp() {
   closeStatsBtn.addEventListener('click', closeStatsModal);
   modeBtn.addEventListener('click', openModeModal);
   closeModeBtn.addEventListener('click', closeModeModal);
+  docsBtn.addEventListener('click', openDocsModal);
+  closeDocsBtn.addEventListener('click', closeDocsModal);
+
   nextLevelBtn.addEventListener('click', closeLevelupModal);
   if (restartTimerBtn) restartTimerBtn.addEventListener('click', restartHackerTimerRun);
 
@@ -548,6 +610,7 @@ function initApp() {
       answerInput.value = '';
       closeStatsModal();
       closeModeModal();
+      closeDocsModal();
       closeLevelupModal();
       if (timeupModal) timeupModal.classList.add('hidden');
     }
@@ -570,9 +633,7 @@ function startHackerTimer() {
 
   state.timerInterval = setInterval(() => {
     state.timerSeconds--;
-    if (state.timerSeconds < 0) {
-      state.timerSeconds = 0;
-    }
+    if (state.timerSeconds < 0) state.timerSeconds = 0;
     timerDisplay.textContent = `${state.timerSeconds}s`;
 
     if (state.timerSeconds <= 0) {
@@ -628,12 +689,31 @@ function updateHUD() {
     levelProgressText.textContent = `ÇÖZÜLEN: ${state.levelSolvedCount} / ${level.required}`;
     const pct = Math.min(100, (state.levelSolvedCount / level.required) * 100);
     levelProgressFill.style.width = `${pct}%`;
-  } else if (state.activeMode === 'MULTIPLICATION') {
+  } else if (state.activeMode === 'MULTIPLICATION_TABLE') {
     campaignLevelNav.style.display = 'none';
-    levelBadge.textContent = `MODE: ÇARPIM`;
+    levelBadge.textContent = `MODE: ÇARPIM TABLOSU`;
     levelTitle.textContent = `✖️ ÇARPIM TABLOSU (${state.multMin} - ${state.multMax})${timerTag}`;
     levelSub.textContent = `Çarpan Aralığı: ${state.multMin} ile ${state.multMax} arası sayılar. Kodları çöz!`;
     modeStatusIndicator.textContent = `● ÇARPIM ARALIĞI: [${state.multMin} - ${state.multMax}]${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'MULTIPLICATION_OP') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: ÇARPIM İŞLEMİ`;
+
+    let typeTitle = 'Rakam × Rakam';
+    if (state.multOpModeType === 'sr') typeTitle = 'Sayı × Rakam';
+    if (state.multOpModeType === 'ss') typeTitle = 'Sayı × Sayı';
+    if (state.multOpModeType === '3r') typeTitle = '3 Basamak × Rakam';
+    if (state.multOpModeType === '3s') typeTitle = '🔥 3 Basamak × Sayı';
+    if (state.multOpModeType === '4r') typeTitle = '🔥 4 Basamak × Rakam';
+    if (state.multOpModeType === '4s') typeTitle = '🔥 4 Basamak × Sayı';
+    if (state.multOpModeType === '10s') typeTitle = "10'un Katları";
+
+    levelTitle.textContent = `✖️ ÇARPIM İŞLEMİ (${typeTitle})${timerTag}`;
+    levelSub.textContent = `İleri düzey zihinsel çarpma alıştırma modu.`;
+    modeStatusIndicator.textContent = `● ÇARPIM İŞLEMİ: (${typeTitle})${timerTag}`;
 
     levelProgressText.textContent = `SERİ: ${state.streak}`;
     levelProgressFill.style.width = `100%`;
@@ -644,6 +724,8 @@ function updateHUD() {
     let typeTitle = 'Rakam + Rakam';
     if (state.addModeType === 'sr') typeTitle = 'Sayı + Rakam';
     if (state.addModeType === 'ss') typeTitle = 'Sayı + Sayı';
+    if (state.addModeType === '33') typeTitle = '🔥 3 Basamaklı';
+    if (state.addModeType === '44') typeTitle = '🔥 4 Basamaklı';
 
     levelTitle.textContent = `➕ TOPLAMA İŞLEMİ (${typeTitle})${timerTag}`;
     levelSub.textContent = `Toplama zihinsel işlem hızlandırma modu. Soruları yanıtla.`;
@@ -658,6 +740,8 @@ function updateHUD() {
     let typeTitle = 'Rakam - Rakam';
     if (state.subModeType === 'sr') typeTitle = 'Sayı - Rakam';
     if (state.subModeType === 'ss') typeTitle = 'Sayı - Sayı';
+    if (state.subModeType === '33') typeTitle = '🔥 3 Basamaklı';
+    if (state.subModeType === '44') typeTitle = '🔥 4 Basamaklı';
 
     levelTitle.textContent = `➖ ÇIKARMA İŞLEMİ (${typeTitle})${timerTag}`;
     levelSub.textContent = `Zihinsel çıkarma ve hızlı refleks geliştirme modu.`;
@@ -672,6 +756,8 @@ function updateHUD() {
     let typeTitle = 'Basit Kalansız';
     if (state.divModeType === 'sr') typeTitle = 'Sayı ÷ Rakam';
     if (state.divModeType === 'ss') typeTitle = 'Sayı ÷ Sayı';
+    if (state.divModeType === '3s') typeTitle = '🔥 3 Basamak ÷ Sayı';
+    if (state.divModeType === '4s') typeTitle = '🔥 4 Basamak ÷ Sayı';
 
     levelTitle.textContent = `➗ BÖLME İŞLEMİ (${typeTitle})${timerTag}`;
     levelSub.textContent = `Kalansız bölme ve zihinsel çarpan mantığı çalıştırma modu.`;
@@ -734,8 +820,10 @@ function loadQuestion() {
   if (state.activeMode === 'CAMPAIGN') {
     const lvlConfig = LEVELS[state.currentLevelIndex];
     state.currentQuestion = lvlConfig.gen();
-  } else if (state.activeMode === 'MULTIPLICATION') {
-    state.currentQuestion = genCustomMultiplication();
+  } else if (state.activeMode === 'MULTIPLICATION_TABLE') {
+    state.currentQuestion = genCustomMultiplicationTable();
+  } else if (state.activeMode === 'MULTIPLICATION_OP') {
+    state.currentQuestion = genCustomMultiplicationOp();
   } else if (state.activeMode === 'ADDITION') {
     state.currentQuestion = genCustomAddition();
   } else if (state.activeMode === 'SUBTRACTION') {
@@ -797,7 +885,6 @@ function handleCorrectAnswer() {
 
   if (state.score > state.highScore) state.highScore = state.score;
 
-  // Add +2s in Hacker Timer Mode
   let extraText = '';
   if (state.hackerTimerEnabled) {
     state.timerSeconds += 2;
@@ -885,8 +972,33 @@ function handleNumpadClick(e) {
 }
 
 // ==========================================
-// 7. STREAMLINED MODE SELECTION MODAL
+// 7. DOCS MODAL & MODE SELECTION EVENTS
 // ==========================================
+function initDocsModalEvents() {
+  const docsTabBtns = document.querySelectorAll('.docs-tab-btn');
+  docsTabBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      docsTabBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.docs-tab-content').forEach(tc => tc.classList.remove('active'));
+
+      e.currentTarget.classList.add('active');
+      const targetId = e.currentTarget.getAttribute('data-docstab');
+      document.getElementById(targetId).classList.add('active');
+    });
+  });
+}
+
+function openDocsModal() {
+  playKeySound();
+  docsModal.classList.remove('hidden');
+}
+
+function closeDocsModal() {
+  playKeySound();
+  docsModal.classList.add('hidden');
+}
+
 function initModeModalEvents() {
   // Modal Tabs
   const tabBtns = document.querySelectorAll('.mode-tab-btn');
@@ -919,7 +1031,7 @@ function initModeModalEvents() {
     });
   }
 
-  // Quick Chips logic for Multiplication
+  // Quick Chips logic for Multiplication Table
   document.querySelectorAll('.chip-btn[data-min]').forEach(chip => {
     chip.addEventListener('click', (e) => {
       playKeySound();
@@ -938,7 +1050,7 @@ function initModeModalEvents() {
       const minInput = parseInt(document.getElementById('mult-min').value, 10) || 1;
       const maxInput = parseInt(document.getElementById('mult-max').value, 10) || 10;
       
-      state.activeMode = 'MULTIPLICATION';
+      state.activeMode = 'MULTIPLICATION_TABLE';
       state.multMin = Math.min(minInput, maxInput);
       state.multMax = Math.max(minInput, maxInput);
 
@@ -950,6 +1062,24 @@ function initModeModalEvents() {
       closeModeModal();
     });
   }
+
+  // Multiplication Operation Preset Buttons
+  document.querySelectorAll('.preset-btn[data-type^="mult-op-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const opKind = type.replace('mult-op-', '');
+      state.activeMode = 'MULTIPLICATION_OP';
+      state.multOpModeType = opKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Çarpım İşlemi Modu (${opKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
 
   // Addition Preset Buttons
   document.querySelectorAll('.preset-btn[data-type^="add-"]').forEach(btn => {

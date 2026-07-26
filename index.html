@@ -20,11 +20,11 @@
       <div class="sys-brand">
         <span class="pulse-dot"></span>
         <span class="brand-title">MATH_DECIPHER</span>
-        <span class="sys-ver">v2.5_PRO</span>
+        <span class="sys-ver">v3.1_DOCS</span>
       </div>
 
       <div class="sys-metrics">
-        <!-- Hacker Timer Box (Shown when Timer Mode active) -->
+        <!-- Hacker Timer Box -->
         <div id="timer-box" class="metric-box hidden pulse-timer">
           <span class="metric-label">⚡ ZAMAN</span>
           <span id="timer-display" class="metric-val text-alert">60s</span>
@@ -46,6 +46,9 @@
       <div class="sys-controls">
         <button id="mode-btn" class="cyber-btn sm primary" title="Çalışma Modunu Değiştir">
           🎯 MOD SEÇİMİ
+        </button>
+        <button id="docs-btn" class="cyber-btn sm gold-glow" title="Zihinsel İşlem Kısayolları Rehberi">
+          📚 KISAYOLLAR
         </button>
         <button id="sound-btn" class="cyber-btn sm" title="Ses Aç/Kapat">
           <span id="sound-icon">🔊</span> SES
@@ -162,7 +165,7 @@
 
     <!-- Footer -->
     <footer class="sys-footer">
-      <span>MATH_DECIPHER v2.5 &copy; 2026</span>
+      <span>MATH_DECIPHER v3.1 DOCS &copy; 2026</span>
       <span>DOKUNMATİK & KLAVYE DESTEKLİ</span>
     </footer>
   </div>
@@ -232,16 +235,14 @@
           </div>
         </div>
 
-        <!-- TAB 2: GENERAL MULTIPLICATION OPERATIONS (YENİ ÇARPIM İŞLEMİ MODLARI) -->
+        <!-- TAB 2: GENERAL MULTIPLICATION OPERATIONS -->
         <div id="mult-op-tab" class="tab-content">
           <div class="direct-range-card">
             <h4 class="section-title">✖️ ÇARPIM İŞLEMİ MODU SEÇİN</h4>
-            <p class="tab-sub text-dim">Çarpan basamak sayılarına göre çarpma pratiği yapın:</p>
-
             <div class="preset-grid add-preset-grid">
               <button class="preset-btn" data-type="mult-op-rr">
                 <span class="preset-title">Rakam × Rakam</span>
-                <span class="preset-sub">Tek basamaklı çarpma (örn: 7 × 8)</span>
+                <span class="preset-sub">Tek basamaklı (örn: 7 × 8)</span>
               </button>
               <button class="preset-btn" data-type="mult-op-sr">
                 <span class="preset-title">Sayı × Rakam</span>
@@ -255,9 +256,21 @@
                 <span class="preset-title">3 Basamak × Rakam</span>
                 <span class="preset-sub">Üç basamaklı × Tek basamaklı (125 × 4)</span>
               </button>
+              <button class="preset-btn extreme" data-type="mult-op-3s">
+                <span class="preset-title">🔥 3 Basamak × Sayı</span>
+                <span class="preset-sub">Üç basamaklı × İki basamaklı (145 × 24)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="mult-op-4r">
+                <span class="preset-title">🔥 4 Basamak × Rakam</span>
+                <span class="preset-sub">Dört basamaklı × Tek basamaklı (1250 × 6)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="mult-op-4s">
+                <span class="preset-title">🔥 4 Basamak × Sayı</span>
+                <span class="preset-sub">Dört basamaklı × İki basamaklı (3450 × 12)</span>
+              </button>
               <button class="preset-btn" data-type="mult-op-10s">
                 <span class="preset-title">10'un Katları ile Çarpma</span>
-                <span class="preset-sub">Pratik zihinsel çarpma (40 × 70)</span>
+                <span class="preset-sub">Zihinsel sıfırlı çarpma (40 × 70)</span>
               </button>
             </div>
           </div>
@@ -270,7 +283,7 @@
             <div class="preset-grid add-preset-grid">
               <button class="preset-btn" data-type="add-rr">
                 <span class="preset-title">Rakam + Rakam</span>
-                <span class="preset-sub">Tek basamaklı toplama (örn: 7 + 8)</span>
+                <span class="preset-sub">Tek basamaklı (örn: 7 + 8)</span>
               </button>
               <button class="preset-btn" data-type="add-sr">
                 <span class="preset-title">Sayı + Rakam</span>
@@ -279,6 +292,14 @@
               <button class="preset-btn" data-type="add-ss">
                 <span class="preset-title">Sayı + Sayı</span>
                 <span class="preset-sub">İki basamaklı + İki basamaklı (35 + 47)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="add-33">
+                <span class="preset-title">🔥 3 Basamaklı Toplama</span>
+                <span class="preset-sub">Üç basamaklı + Üç basamaklı (342 + 587)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="add-44">
+                <span class="preset-title">🔥 4 Basamaklı Toplama</span>
+                <span class="preset-sub">Dört basamaklı + Dört basamaklı (2450 + 3180)</span>
               </button>
             </div>
           </div>
@@ -291,7 +312,7 @@
             <div class="preset-grid add-preset-grid">
               <button class="preset-btn" data-type="sub-rr">
                 <span class="preset-title">Rakam - Rakam</span>
-                <span class="preset-sub">Tek basamaklı çıkarma (örn: 9 - 4)</span>
+                <span class="preset-sub">Tek basamaklı (örn: 9 - 4)</span>
               </button>
               <button class="preset-btn" data-type="sub-sr">
                 <span class="preset-title">Sayı - Rakam</span>
@@ -300,6 +321,14 @@
               <button class="preset-btn" data-type="sub-ss">
                 <span class="preset-title">Sayı - Sayı</span>
                 <span class="preset-sub">İki basamaklı - İki basamaklı (83 - 37)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="sub-33">
+                <span class="preset-title">🔥 3 Basamaklı Çıkarma</span>
+                <span class="preset-sub">Üç basamaklı - Üç basamaklı (742 - 385)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="sub-44">
+                <span class="preset-title">🔥 4 Basamaklı Çıkarma</span>
+                <span class="preset-sub">Dört basamaklı - Dört basamaklı (8450 - 3120)</span>
               </button>
             </div>
           </div>
@@ -322,6 +351,14 @@
                 <span class="preset-title">Sayı ÷ Sayı</span>
                 <span class="preset-sub">İki basamaklı bölenler (örn: 144 ÷ 12)</span>
               </button>
+              <button class="preset-btn extreme" data-type="div-3s">
+                <span class="preset-title">🔥 3 Basamak ÷ Sayı</span>
+                <span class="preset-sub">Üç basamaklı bölünen (örn: 450 ÷ 15)</span>
+              </button>
+              <button class="preset-btn extreme" data-type="div-4s">
+                <span class="preset-title">🔥 4 Basamak ÷ Sayı</span>
+                <span class="preset-sub">Dört basamaklı bölünen (örn: 2400 ÷ 50)</span>
+              </button>
             </div>
           </div>
         </div>
@@ -332,6 +369,182 @@
           <p class="tab-sub text-dim">Adım adım zorlaşan 10 siber katmanda şifre çözme becerini test et.</p>
           <div class="preset-grid campaign-grid" id="modal-campaign-list">
             <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE SHORTCUTS & DOCS MODAL (SİBER MATEMATİK AKADEMİSİ) -->
+  <div id="docs-modal" class="modal-overlay hidden">
+    <div class="modal-content cyber-window docs-modal-card">
+      <div class="modal-header">
+        <h3>📚 SİBER MATEMATİK AKADEMİSİ // HIZLI İŞLEM KISAYOLLARI</h3>
+        <button id="close-docs-btn" class="close-btn">&times;</button>
+      </div>
+
+      <div class="modal-body docs-modal-body">
+        <div class="docs-tabs">
+          <button class="docs-tab-btn active" data-docstab="doc-mult">✖️ ÇARPMA KISAYOLLARI</button>
+          <button class="docs-tab-btn" data-docstab="doc-add">➕ TOPLAMA KISAYOLLARI</button>
+          <button class="docs-tab-btn" data-docstab="doc-sub">➖ ÇIKARMA KISAYOLLARI</button>
+          <button class="docs-tab-btn" data-docstab="doc-div">➗ BÖLME KISAYOLLARI</button>
+        </div>
+
+        <!-- DOCS TAB 1: MULTIPLICATION SHORTCUTS -->
+        <div id="doc-mult" class="docs-tab-content active">
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">01</span>
+              <h4>11 ile Kısa Yoldan Çarpma Kuralı</h4>
+            </div>
+            <p class="shortcut-desc">İki basamaklı bir sayıyı 11 ile çarparken rakamları iki yana ayırın ve ortasına rakamlar toplamını yazın!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek 1: <strong class="text-green">36 × 11</strong></span>
+              <span class="ex-step">1) Rakamları ayır: <strong>3 _ 6</strong></span>
+              <span class="ex-step">2) Rakamları topla: <strong>3 + 6 = 9</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">396</strong></span>
+            </div>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek 2 (Eldeli): <strong class="text-green">47 × 11</strong></span>
+              <span class="ex-step">1) Toplam: <strong>4 + 7 = 11</strong></span>
+              <span class="ex-step">2) 1'i ortada tut, 1 eldeyi sola ekle: <strong>(4+1) _ 1 _ 7</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">517</strong></span>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">02</span>
+              <h4>Sonu 5 ile Biten Sayıların Karesi ($N5^2$)</h4>
+            </div>
+            <p class="shortcut-desc">Sonu 5 ile biten iki basamaklı bir sayının karesini alırken, onlar basamağındaki rakamı 1 fazlasıyla çarpın ve sonuna <strong>25</strong> yazın!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek: <strong class="text-green">35 × 35</strong></span>
+              <span class="ex-step">1) Onlar basamağı 3: <strong>3 × (3 + 1) = 3 × 4 = 12</strong></span>
+              <span class="ex-step">2) Sonuna 25 ekle: <strong>1225</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">1225</strong></span>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">03</span>
+              <h4>5, 25 ve 50 ile Kısa Çarpma Kuralı</h4>
+            </div>
+            <p class="shortcut-desc">Katlar üzerinden kolay bölme ve sıfır ekleme stratejisi:</p>
+            <div class="example-box">
+              <span class="ex-step">🔹 <strong>× 5 Kuralı:</strong> Sayıyı 2'ye böl, sonuna 0 koy. (Örn: <strong>18 × 5 ➔ 18÷2 = 9 ➔ 90</strong>)</span>
+              <span class="ex-step">🔹 <strong>× 25 Kuralı:</strong> Sayıyı 4'e böl, sonuna 00 koy. (Örn: <strong>36 × 25 ➔ 36÷4 = 9 ➔ 900</strong>)</span>
+              <span class="ex-step">🔹 <strong>× 50 Kuralı:</strong> Sayıyı 2'ye böl, sonuna 00 koy. (Örn: <strong>24 × 50 ➔ 24÷2 = 12 ➔ 1200</strong>)</span>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">04</span>
+              <h4>9 ve 99 ile Çarpma (Yuvarlama Tekniği)</h4>
+            </div>
+            <p class="shortcut-desc">Sayının sonuna sıfır ekleyip kendisini çıkarın!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek: <strong class="text-green">43 × 99</strong></span>
+              <span class="ex-step">1) 100 ile çarp: <strong>43 × 100 = 4300</strong></span>
+              <span class="ex-step">2) Kendisini çıkar: <strong>4300 - 43 = 4257</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">4257</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB 2: ADDITION SHORTCUTS -->
+        <div id="doc-add" class="docs-tab-content">
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">01</span>
+              <h4>Soldan Sağa Toplama Yöntemi (Left-to-Right)</h4>
+            </div>
+            <p class="shortcut-desc">Zihinden hızlı toplama yaparken birler basamağından değil, en soldaki en büyük basamaktan başlayın!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek: <strong class="text-green">346 + 285</strong></span>
+              <span class="ex-step">1) Yüzlükler: <strong>300 + 200 = 500</strong></span>
+              <span class="ex-step">2) Onluklar: <strong>40 + 80 = 120</strong> ➔ (Toplam: 620)</span>
+              <span class="ex-step">3) Birlikler: <strong>6 + 5 = 11</strong> ➔ (Toplam: 631)</span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">631</strong></span>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">02</span>
+              <h4>Yuvarlama ve Dengeleme (Telafi Yöntemi)</h4>
+            </div>
+            <p class="shortcut-desc">Toplanacak sayılardan birini en yakın 10'a yuvarlayın, sonra eklediğiniz fazlalığı düşürün!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek: <strong class="text-green">47 + 38</strong></span>
+              <span class="ex-step">1) 47'yi 50'ye yuvarla (+3 ekledik): <strong>50 + 38 = 88</strong></span>
+              <span class="ex-step">2) Eklenen 3'ü çıkar: <strong>88 - 3 = 85</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">85</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB 3: SUBTRACTION SHORTCUTS -->
+        <div id="doc-sub" class="docs-tab-content">
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">01</span>
+              <h4>100 ve 1000'den Çıkarma (9'lar ve 10'lar Kuralı)</h4>
+            </div>
+            <p class="shortcut-desc">1000 gibi tam katlardan sayı çıkarırken eldesiz çıkarma yapın: En son basamağı 10'dan, diğer basamakları 9'dan çıkarın!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek: <strong class="text-green">1000 - 437</strong></span>
+              <span class="ex-step">1) Yüzler (9'dan çıkar): <strong>9 - 4 = 5</strong></span>
+              <span class="ex-step">2) Onlar (9'dan çıkar): <strong>9 - 3 = 6</strong></span>
+              <span class="ex-step">3) Birler (10'dan çıkar): <strong>10 - 7 = 3</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">563</strong></span>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">02</span>
+              <h4>Sabit Fark Yöntemi (Constant Difference)</h4>
+            </div>
+            <p class="shortcut-desc">Çıkarılan sayıyı en yakın 10'a tamamlamak için her iki sayıya da aynı değeri ekleyin!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek: <strong class="text-green">83 - 39</strong></span>
+              <span class="ex-step">1) İki sayıya da +1 ekle: <strong>84 - 40</strong></span>
+              <span class="ex-step">2) Kolayca çıkar: <strong>84 - 40 = 44</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">44</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCS TAB 4: DIVISION SHORTCUTS -->
+        <div id="doc-div" class="docs-tab-content">
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">01</span>
+              <h4>5 ile Kısa Yoldan Bölme Kuralı</h4>
+            </div>
+            <p class="shortcut-desc">Bir sayıyı 5'e bölmek için sayıyı 2 ile çarpıp 10'a bölün (virgülü 1 sola kaydırın)!</p>
+            <div class="example-box">
+              <span class="ex-title">📌 Örnek: <strong class="text-green">165 ÷ 5</strong></span>
+              <span class="ex-step">1) Sayıyı 2 ile çarp: <strong>165 × 2 = 330</strong></span>
+              <span class="ex-step">2) 10'a böl (son 0'ı sil): <strong>33</strong></span>
+              <span class="ex-result">Sonuç: <strong class="text-gold">33</strong></span>
+            </div>
+          </div>
+
+          <div class="shortcut-card">
+            <div class="shortcut-header">
+              <span class="shortcut-num">02</span>
+              <h4>4 ve 8 ile Hızlı Çift Bölme</h4>
+            </div>
+            <p class="shortcut-desc">Bölme işlemini parçalara ayırarak zihinden kolayca yapın!</p>
+            <div class="example-box">
+              <span class="ex-step">🔹 <strong>÷ 4 Kuralı:</strong> İki kez üst üste 2'ye böl. (Örn: <strong>144÷4 ➔ 144÷2=72 ➔ 72÷2=36</strong>)</span>
+              <span class="ex-step">🔹 <strong>÷ 8 Kuralı:</strong> Üç kez üst üste 2'ye böl. (Örn: <strong>200÷8 ➔ 200➔100➔50➔25</strong>)</span>
+            </div>
           </div>
         </div>
       </div>
