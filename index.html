@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MATH_DECIPHER // Cyber Math Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="crt-effect">
+  <!-- Matrix Rain Canvas Background -->
+  <canvas id="matrix-canvas"></canvas>
+  <div class="scanline-overlay"></div>
+
+  <div class="app-container">
+    <!-- Top System Header Bar -->
+    <header class="sys-header">
+      <div class="sys-brand">
+        <span class="pulse-dot"></span>
+        <span class="brand-title">MATH_DECIPHER</span>
+        <span class="sys-ver">v2.5_PRO</span>
+      </div>
+
+      <div class="sys-metrics">
+        <!-- Hacker Timer Box (Shown when Timer Mode active) -->
+        <div id="timer-box" class="metric-box hidden pulse-timer">
+          <span class="metric-label">⚡ ZAMAN</span>
+          <span id="timer-display" class="metric-val text-alert">60s</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-label">SKOR</span>
+          <span id="score-display" class="metric-val">00000</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-label">KOMBO</span>
+          <span id="streak-display" class="metric-val text-cyan">x1 (0)</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-label">EN YÜKSEK</span>
+          <span id="highscore-display" class="metric-val text-gold">00000</span>
+        </div>
+      </div>
+
+      <div class="sys-controls">
+        <button id="mode-btn" class="cyber-btn sm primary" title="Çalışma Modunu Değiştir">
+          🎯 MOD SEÇİMİ
+        </button>
+        <button id="sound-btn" class="cyber-btn sm" title="Ses Aç/Kapat">
+          <span id="sound-icon">🔊</span> SES
+        </button>
+        <button id="matrix-toggle-btn" class="cyber-btn sm hidden-mobile" title="Matrix Yağmuru">
+          MATRIX
+        </button>
+        <button id="stats-btn" class="cyber-btn sm">
+          📊 RAPOR
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Terminal Container -->
+    <main class="terminal-wrapper">
+      <div class="terminal-window">
+        <!-- Terminal Header Controls -->
+        <div class="window-bar">
+          <div class="bar-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="window-title" id="terminal-title">MATH_DECIPHER://SYS_MODE_ACTIVE</div>
+          <div class="clearance-badge" id="level-badge">CLEARANCE: 0x01</div>
+        </div>
+
+        <!-- Terminal Body -->
+        <div class="terminal-content">
+          <!-- Level / Mode Info Banner -->
+          <div class="level-banner">
+            <div class="level-header">
+              <h2 id="level-title">LEVEL 0x01: TEMEL ERİŞİM</h2>
+              <span id="level-progress-text" class="progress-counter">ÇÖZÜLEN: 0 / 5</span>
+            </div>
+            <p id="level-desc" class="level-sub">Sistem pinglemesi alınıyor... Düz aritmetik işlemleri çözerek veri paketini doğrula.</p>
+
+            <div class="progress-bar-container">
+              <div id="level-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Decipher Cipher Box -->
+          <div class="cipher-box">
+            <div class="cipher-status-bar">
+              <span class="status-indicator" id="mode-status-indicator">● ENCRYPTED PACKET DETECTED</span>
+              <span id="cipher-hash" class="hash-code">HASH: [0x4F89A1]</span>
+            </div>
+
+            <!-- Main Math Question Container -->
+            <div class="question-container">
+              <div id="cipher-glitch-text" class="cipher-glitch">01010110010101</div>
+              <div id="question-text" class="question-display">--- ? ---</div>
+            </div>
+
+            <!-- Answer Feedback Banner -->
+            <div id="feedback-banner" class="feedback-banner hidden">
+              <span id="feedback-text">DECRYPTION SUCCESSFUL!</span>
+            </div>
+          </div>
+
+          <!-- Terminal Input Console -->
+          <form id="answer-form" class="console-input-row" autocomplete="off">
+            <div class="prompt-symbol">SYS_INPUT &gt;</div>
+            <input type="text" id="answer-input" class="cyber-input" placeholder="Cevap..." autofocus autocomplete="off" inputmode="numeric">
+            <button type="submit" id="submit-btn" class="cyber-btn primary">
+              <span>ŞİFREYİ ÇÖZ</span> [ENTER]
+            </button>
+          </form>
+
+          <!-- On-screen Cyber Numpad (Mobile Friendly) -->
+          <div class="numpad-container">
+            <button type="button" class="numpad-btn" data-key="7">7</button>
+            <button type="button" class="numpad-btn" data-key="8">8</button>
+            <button type="button" class="numpad-btn" data-key="9">9</button>
+            <button type="button" class="numpad-btn action" data-key="minus">-</button>
+
+            <button type="button" class="numpad-btn" data-key="4">4</button>
+            <button type="button" class="numpad-btn" data-key="5">5</button>
+            <button type="button" class="numpad-btn" data-key="6">6</button>
+            <button type="button" class="numpad-btn action" data-key="clear">CLR</button>
+
+            <button type="button" class="numpad-btn" data-key="1">1</button>
+            <button type="button" class="numpad-btn" data-key="2">2</button>
+            <button type="button" class="numpad-btn" data-key="3">3</button>
+            <button type="button" class="numpad-btn action submit" data-key="submit">↵</button>
+
+            <button type="button" class="numpad-btn zero" data-key="0">0</button>
+            <button type="button" class="numpad-btn" data-key="backspace">⌫</button>
+          </div>
+
+          <!-- Console Event Log -->
+          <div class="console-log-box">
+            <div class="log-header">
+              <span>TERMINAL LOGS</span>
+              <span id="log-clock">11:06:00</span>
+            </div>
+            <div id="log-content" class="log-lines">
+              <div class="log-line info">[SYS_INIT] MATH_DECIPHER çekirdek sistemi yüklendi.</div>
+              <div class="log-line info">[SYS_READY] Çalışma modunuz aktif. Soruları yanıtlayın.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Level Navigation Bar (Campaign Mode) -->
+    <nav class="level-nav" id="campaign-level-nav">
+      <span class="nav-title">SEVİYELER:</span>
+      <div id="level-buttons-container" class="level-btn-group">
+        <!-- Generated by JS -->
+      </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="sys-footer">
+      <span>MATH_DECIPHER v2.5 &copy; 2026</span>
+      <span>DOKUNMATİK & KLAVYE DESTEKLİ</span>
+    </footer>
+  </div>
+
+  <!-- MODE SELECTION MODAL -->
+  <div id="mode-modal" class="modal-overlay hidden">
+    <div class="modal-content cyber-window mode-modal-card">
+      <div class="modal-header">
+        <h3>🎯 ÇALIŞMA VE HACKER MODU SEÇİMİ</h3>
+        <button id="close-mode-btn" class="close-btn">&times;</button>
+      </div>
+
+      <div class="modal-body mode-selection-body">
+        <!-- Global Hacker Timer Switch Banner -->
+        <div class="hacker-timer-toggle-card">
+          <div class="toggle-info">
+            <span class="toggle-title">⚡ ZAMANA KARŞI HACKER MODU</span>
+            <span class="toggle-sub">Her doğru cevap sürene +2 saniye ekler! (60s Geri Sayım)</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="hacker-timer-checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+        <!-- Mode Tabs -->
+        <div class="mode-tabs">
+          <button class="mode-tab-btn active" data-tab="mult-table-tab">✖️ ÇARPIM TABLOSU</button>
+          <button class="mode-tab-btn" data-tab="mult-op-tab">✖️ ÇARPIM İŞLEMİ</button>
+          <button class="mode-tab-btn" data-tab="add-tab">➕ TOPLAMA</button>
+          <button class="mode-tab-btn" data-tab="sub-tab">➖ ÇIKARMA</button>
+          <button class="mode-tab-btn" data-tab="div-tab">➗ BÖLME</button>
+          <button class="mode-tab-btn" data-tab="campaign-tab">🏆 KARİYER</button>
+        </div>
+
+        <!-- TAB 1: MULTIPLICATION TABLE RANGE SELECTOR -->
+        <div id="mult-table-tab" class="tab-content active">
+          <div class="direct-range-card">
+            <h4 class="section-title">✖️ ÇARPIM TABLOSU ARALIĞI SEÇİN</h4>
+            <p class="tab-sub text-dim">Hangi sayılar arasında çarpım tablosu çalışmak istediğinizi seçin:</p>
+
+            <div class="quick-chip-row">
+              <span class="chip-label">Hızlı Seçim:</span>
+              <button class="chip-btn" data-min="1" data-max="5">1 - 5</button>
+              <button class="chip-btn" data-min="1" data-max="10">1 - 10</button>
+              <button class="chip-btn" data-min="5" data-max="10">5 - 10</button>
+              <button class="chip-btn" data-min="1" data-max="15">1 - 15</button>
+              <button class="chip-btn" data-min="1" data-max="20">1 - 20</button>
+              <button class="chip-btn" data-min="1" data-max="30">1 - 30</button>
+            </div>
+
+            <div class="range-controls-direct">
+              <div class="range-box-item">
+                <span class="field-desc">En Küçük Çarpan:</span>
+                <input type="number" id="mult-min" min="1" max="30" value="1" class="range-input-lg">
+              </div>
+              <div class="range-dash">➔</div>
+              <div class="range-box-item">
+                <span class="field-desc">En Büyük Çarpan:</span>
+                <input type="number" id="mult-max" min="1" max="30" value="10" class="range-input-lg">
+              </div>
+            </div>
+
+            <button id="apply-custom-mult-btn" class="cyber-btn primary lg action-full-btn">
+              🚀 ÇARPIM TABLOSUNU BAŞLAT
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 2: GENERAL MULTIPLICATION OPERATIONS (YENİ ÇARPIM İŞLEMİ MODLARI) -->
+        <div id="mult-op-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">✖️ ÇARPIM İŞLEMİ MODU SEÇİN</h4>
+            <p class="tab-sub text-dim">Çarpan basamak sayılarına göre çarpma pratiği yapın:</p>
+
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn" data-type="mult-op-rr">
+                <span class="preset-title">Rakam × Rakam</span>
+                <span class="preset-sub">Tek basamaklı çarpma (örn: 7 × 8)</span>
+              </button>
+              <button class="preset-btn" data-type="mult-op-sr">
+                <span class="preset-title">Sayı × Rakam</span>
+                <span class="preset-sub">İki basamaklı × Tek basamaklı (24 × 6)</span>
+              </button>
+              <button class="preset-btn" data-type="mult-op-ss">
+                <span class="preset-title">Sayı × Sayı</span>
+                <span class="preset-sub">İki basamaklı × İki basamaklı (18 × 25)</span>
+              </button>
+              <button class="preset-btn" data-type="mult-op-3r">
+                <span class="preset-title">3 Basamak × Rakam</span>
+                <span class="preset-sub">Üç basamaklı × Tek basamaklı (125 × 4)</span>
+              </button>
+              <button class="preset-btn" data-type="mult-op-10s">
+                <span class="preset-title">10'un Katları ile Çarpma</span>
+                <span class="preset-sub">Pratik zihinsel çarpma (40 × 70)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: ADDITION MODES -->
+        <div id="add-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">➕ TOPLAMA İŞLEMİ MODU SEÇİN</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn" data-type="add-rr">
+                <span class="preset-title">Rakam + Rakam</span>
+                <span class="preset-sub">Tek basamaklı toplama (örn: 7 + 8)</span>
+              </button>
+              <button class="preset-btn" data-type="add-sr">
+                <span class="preset-title">Sayı + Rakam</span>
+                <span class="preset-sub">İki basamaklı + Tek basamaklı (42 + 9)</span>
+              </button>
+              <button class="preset-btn" data-type="add-ss">
+                <span class="preset-title">Sayı + Sayı</span>
+                <span class="preset-sub">İki basamaklı + İki basamaklı (35 + 47)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: SUBTRACTION MODES -->
+        <div id="sub-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">➖ ÇIKARMA İŞLEMİ MODU SEÇİN</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn" data-type="sub-rr">
+                <span class="preset-title">Rakam - Rakam</span>
+                <span class="preset-sub">Tek basamaklı çıkarma (örn: 9 - 4)</span>
+              </button>
+              <button class="preset-btn" data-type="sub-sr">
+                <span class="preset-title">Sayı - Rakam</span>
+                <span class="preset-sub">İki basamaklı - Tek basamaklı (45 - 7)</span>
+              </button>
+              <button class="preset-btn" data-type="sub-ss">
+                <span class="preset-title">Sayı - Sayı</span>
+                <span class="preset-sub">İki basamaklı - İki basamaklı (83 - 37)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: DIVISION MODES -->
+        <div id="div-tab" class="tab-content">
+          <div class="direct-range-card">
+            <h4 class="section-title">➗ BÖLME İŞLEMİ MODU SEÇİN</h4>
+            <div class="preset-grid add-preset-grid">
+              <button class="preset-btn" data-type="div-basit">
+                <span class="preset-title">Basit Kalansız Bölme</span>
+                <span class="preset-sub">1-10 arası bölenler (örn: 24 ÷ 4)</span>
+              </button>
+              <button class="preset-btn" data-type="div-sr">
+                <span class="preset-title">Sayı ÷ Rakam</span>
+                <span class="preset-sub">İki basamaklı sonuçlar (örn: 84 ÷ 6)</span>
+              </button>
+              <button class="preset-btn" data-type="div-ss">
+                <span class="preset-title">Sayı ÷ Sayı</span>
+                <span class="preset-sub">İki basamaklı bölenler (örn: 144 ÷ 12)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: CAMPAIGN LEVELS -->
+        <div id="campaign-tab" class="tab-content">
+          <h4 class="section-title">🏆 10 KATMANLI SİBER KARİYER MODU:</h4>
+          <p class="tab-sub text-dim">Adım adım zorlaşan 10 siber katmanda şifre çözme becerini test et.</p>
+          <div class="preset-grid campaign-grid" id="modal-campaign-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIME'S UP / GAME OVER MODAL -->
+  <div id="timeup-modal" class="modal-overlay hidden">
+    <div class="modal-content cyber-window timeup-card">
+      <div class="timeup-header">
+        <span class="glitch-title text-alert">⚠️ TIME EXPIRED!</span>
+        <h2>SÜRE DOLDU!</h2>
+      </div>
+      <div class="timeup-stats">
+        <div class="timeup-stat-item">
+          <span class="stat-label">ÇÖZÜLEN PAKET:</span>
+          <span id="timeup-solved-count" class="stat-val text-green">0</span>
+        </div>
+        <div class="timeup-stat-item">
+          <span class="stat-label">TOPLAM SKOR:</span>
+          <span id="timeup-final-score" class="stat-val text-gold">0</span>
+        </div>
+        <div class="timeup-stat-item">
+          <span class="stat-label">EN İYİ SERİ:</span>
+          <span id="timeup-best-streak" class="stat-val text-cyan">0</span>
+        </div>
+      </div>
+      <button id="restart-timer-btn" class="cyber-btn primary lg">🚀 RE-START HACKER RUN</button>
+    </div>
+  </div>
+
+  <!-- Stats & Badges Modal -->
+  <div id="stats-modal" class="modal-overlay hidden">
+    <div class="modal-content cyber-window">
+      <div class="modal-header">
+        <h3>📊 SISTEM PERFORMANS RAPORU</h3>
+        <button id="close-stats-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-num" id="stat-total-solved">0</span>
+            <span class="stat-desc">Toplam Çözülen Paket</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-accuracy">100%</span>
+            <span class="stat-desc">Başarı Oranı</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-best-streak">0</span>
+            <span class="stat-desc">En İyi Kombo Serisi</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="stat-opm">0</span>
+            <span class="stat-desc">İşlem Hızı (Paket/Dk)</span>
+          </div>
+        </div>
+
+        <h4 class="section-title">🎖️ BAŞARIM ROZETLERİ</h4>
+        <div class="badges-grid" id="badges-container">
+          <!-- Badges dynamically rendered -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level Up Overlay Modal -->
+  <div id="levelup-modal" class="modal-overlay hidden">
+    <div class="modal-content cyber-window levelup-card">
+      <div class="levelup-header">
+        <span class="glitch-title">CLEARANCE GRANTED!</span>
+        <h2 id="levelup-level-title">SEVİYE YÜKSELTİLDİ: 0x02</h2>
+      </div>
+      <p id="levelup-desc">Yeni veri katmanına erişim yetkisi verildi. Yeni soru türü aktif!</p>
+      <button id="next-level-btn" class="cyber-btn primary lg">SONRAKİ KATMANA GEÇ</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
