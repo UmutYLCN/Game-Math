@@ -1,5 +1,5 @@
 /**
- * MATH_DECIPHER // Core Game Engine v3.1 (Mental Math Shortcuts Docs & Academy)
+ * MATH_DECIPHER // Core Game Engine v4.5 (Square Roots & KaTeX Powered Renderer)
  * Cyber Math Decryption Game
  */
 
@@ -100,12 +100,14 @@ const BADGES = [
 
 // App State
 let state = {
-  activeMode: 'CAMPAIGN', // 'CAMPAIGN' | 'MULTIPLICATION_TABLE' | 'MULTIPLICATION_OP' | 'ADDITION' | 'SUBTRACTION' | 'DIVISION'
+  activeMode: 'CAMPAIGN', // 'CAMPAIGN' | 'MULTIPLICATION_TABLE' | 'MULTIPLICATION_OP' | 'EXPONENTS' | 'SQUARE_ROOTS' | 'ADDITION' | 'SUBTRACTION' | 'DIVISION'
   
   multMin: 1,
   multMax: 10,
 
   multOpModeType: 'rr',
+  expModeType: '2n',
+  rootModeType: 'basic', // 'basic' | 'addsub' | 'mult' | 'mix'
   addModeType: 'rr',
   subModeType: 'rr',
   divModeType: 'basit',
@@ -132,7 +134,28 @@ let state = {
 };
 
 // ==========================================
-// 2. AUDIO SYNTHESIZER (Web Audio API)
+// 2. KATEX MATH RENDERING ENGINE
+// ==========================================
+function renderKaTeX() {
+  if (window.renderMathInElement) {
+    try {
+      window.renderMathInElement(document.body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true }
+        ],
+        throwOnError: false
+      });
+    } catch (e) {
+      console.error('KaTeX rendering error:', e);
+    }
+  }
+}
+
+// ==========================================
+// 3. AUDIO SYNTHESIZER (Web Audio API)
 // ==========================================
 let audioCtx = null;
 
@@ -196,7 +219,7 @@ function playLevelUpSound() {
 }
 
 // ==========================================
-// 3. MATRIX RAIN CANVAS BACKGROUND
+// 4. MATRIX RAIN CANVAS BACKGROUND
 // ==========================================
 const canvas = document.getElementById('matrix-canvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
@@ -237,10 +260,97 @@ function drawMatrix() {
 }
 
 // ==========================================
-// 4. QUESTION GENERATORS
+// 5. QUESTION GENERATORS (SQUARE ROOTS INCLUDED)
 // ==========================================
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// SQUARE ROOTS GENERATOR (YENİ KAREKÖK İFADELER MOTORU)
+function genCustomSquareRoots() {
+  if (state.rootModeType === 'basic') {
+    // Tam Kare Kökler (√1 - √625)
+    const root = getRandomInt(2, 25);
+    const sq = root * root;
+    return { q: `√${sq} = ?`, ans: root };
+  } else if (state.rootModeType === 'addsub') {
+    // Köklü Toplama / Çıkarma (√36 + √64 = 14)
+    const r1 = getRandomInt(2, 15);
+    const r2 = getRandomInt(2, 15);
+    const isAdd = Math.random() > 0.4;
+    let val1 = r1 * r1;
+    let val2 = r2 * r2;
+    if (!isAdd && r1 < r2) {
+      return { q: `√${val2} - √${val1} = ?`, ans: r2 - r1 };
+    }
+    return {
+      q: `√${val1} ${isAdd ? '+' : '-'} √${val2} = ?`,
+      ans: isAdd ? (r1 + r2) : (r1 - r2)
+    };
+  } else if (state.rootModeType === 'mult') {
+    // Köklü Çarpma (√4 × √9 = 6 veya √2 × √8 = 4)
+    if (Math.random() > 0.5) {
+      const r1 = getRandomInt(2, 10);
+      const r2 = getRandomInt(2, 10);
+      return { q: `√${r1*r1} × √${r2*r2} = ?`, ans: r1 * r2 };
+    } else {
+      const k = getRandomInt(2, 6);
+      const m = getRandomInt(2, 5);
+      const val1 = k * m;
+      const val2 = k * m * m; // val1 * val2 = k^2 * m^3... wait, let's keep integer root
+      const a = getRandomInt(2, 8);
+      const b = getRandomInt(2, 8);
+      const product = a * a * b * b;
+      return { q: `√${a*a} × √${b*b} = ?`, ans: a * b };
+    }
+  } else {
+    // Karışık Karekök
+    const r = getRandomInt(3, 30);
+    return { q: `√${r * r} = ?`, ans: r };
+  }
+}
+
+// EXPONENTS GENERATOR
+function genCustomExponents() {
+  let base = 2, exp = 1;
+  if (state.expModeType === '2n') {
+    base = 2;
+    exp = getRandomInt(1, 10);
+  } else if (state.expModeType === '35n') {
+    if (Math.random() > 0.5) {
+      base = 3;
+      exp = getRandomInt(1, 5);
+    } else {
+      base = 5;
+      exp = getRandomInt(1, 4);
+    }
+  } else if (state.expModeType === 'sq') {
+    base = getRandomInt(1, 25);
+    exp = 2;
+  } else if (state.expModeType === 'cube') {
+    base = getRandomInt(1, 10);
+    exp = 3;
+  } else if (state.expModeType === '10n') {
+    base = 10;
+    exp = getRandomInt(1, 6);
+  } else if (state.expModeType === 'mix') {
+    base = getRandomInt(2, 9);
+    exp = getRandomInt(2, 4);
+  }
+
+  const ans = Math.pow(base, exp);
+  return {
+    q: `${base}${toSuperscript(exp)} = ?`,
+    ans: ans
+  };
+}
+
+function toSuperscript(num) {
+  const supers = {
+    '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+    '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹'
+  };
+  return String(num).split('').map(d => supers[d] || d).join('');
 }
 
 // MULTIPLICATION TABLE GENERATOR
@@ -483,7 +593,7 @@ function genLevel10() {
 }
 
 // ==========================================
-// 5. DOM ELEMENTS & STATE MANAGEMENT
+// 6. DOM ELEMENTS & STATE MANAGEMENT
 // ==========================================
 const scoreDisplay = document.getElementById('score-display');
 const streakDisplay = document.getElementById('streak-display');
@@ -585,6 +695,8 @@ function initApp() {
 
   updateHUD();
   loadQuestion();
+
+  setTimeout(renderKaTeX, 300);
 
   soundBtn.addEventListener('click', toggleSound);
   if (matrixToggleBtn) matrixToggleBtn.addEventListener('click', toggleMatrix);
@@ -717,6 +829,38 @@ function updateHUD() {
 
     levelProgressText.textContent = `SERİ: ${state.streak}`;
     levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'EXPONENTS') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: ÜSLÜ SAYILAR`;
+
+    let typeTitle = "2'nin Kuvvetleri (2ⁿ)";
+    if (state.expModeType === '35n') typeTitle = "3 & 5'in Kuvvetleri";
+    if (state.expModeType === 'sq') typeTitle = 'Tam Kareler (x²)';
+    if (state.expModeType === 'cube') typeTitle = 'Küp İfadeler (x³)';
+    if (state.expModeType === '10n') typeTitle = "10'un Kuvvetleri (10ⁿ)";
+    if (state.expModeType === 'mix') typeTitle = '🔥 Karışık Üslü Sayılar';
+
+    levelTitle.textContent = `⚡ ÜSLÜ SAYILAR (${typeTitle})${timerTag}`;
+    levelSub.textContent = `Zihinsel üslü ifade ve hafıza kuvvetlendirme modu.`;
+    modeStatusIndicator.textContent = `● ÜSLÜ SAYILAR: (${typeTitle})${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
+  } else if (state.activeMode === 'SQUARE_ROOTS') {
+    campaignLevelNav.style.display = 'none';
+    levelBadge.textContent = `MODE: KAREKÖK`;
+
+    let typeTitle = 'Tam Kare Kökler';
+    if (state.rootModeType === 'addsub') typeTitle = 'Köklü Toplama/Çıkarma';
+    if (state.rootModeType === 'mult') typeTitle = 'Köklü Çarpma';
+    if (state.rootModeType === 'mix') typeTitle = '🔥 Karışık Karekök';
+
+    levelTitle.textContent = `√ KAREKÖK İFADELER (${typeTitle})${timerTag}`;
+    levelSub.textContent = `Köklü ifadeler ve zihinsel tam kare hesabı alıştırma modu.`;
+    modeStatusIndicator.textContent = `● KAREKÖK İFADELER: (${typeTitle})${timerTag}`;
+
+    levelProgressText.textContent = `SERİ: ${state.streak}`;
+    levelProgressFill.style.width = `100%`;
   } else if (state.activeMode === 'ADDITION') {
     campaignLevelNav.style.display = 'none';
     levelBadge.textContent = `MODE: TOPLAMA`;
@@ -814,7 +958,7 @@ function selectCampaignLevel(idx) {
 }
 
 // ==========================================
-// 6. QUESTION & DECIPHER LOGIC
+// 7. QUESTION & DECIPHER LOGIC
 // ==========================================
 function loadQuestion() {
   if (state.activeMode === 'CAMPAIGN') {
@@ -824,6 +968,10 @@ function loadQuestion() {
     state.currentQuestion = genCustomMultiplicationTable();
   } else if (state.activeMode === 'MULTIPLICATION_OP') {
     state.currentQuestion = genCustomMultiplicationOp();
+  } else if (state.activeMode === 'EXPONENTS') {
+    state.currentQuestion = genCustomExponents();
+  } else if (state.activeMode === 'SQUARE_ROOTS') {
+    state.currentQuestion = genCustomSquareRoots();
   } else if (state.activeMode === 'ADDITION') {
     state.currentQuestion = genCustomAddition();
   } else if (state.activeMode === 'SUBTRACTION') {
@@ -972,7 +1120,7 @@ function handleNumpadClick(e) {
 }
 
 // ==========================================
-// 7. DOCS MODAL & MODE SELECTION EVENTS
+// 8. DOCS MODAL & MODE SELECTION EVENTS
 // ==========================================
 function initDocsModalEvents() {
   const docsTabBtns = document.querySelectorAll('.docs-tab-btn');
@@ -984,7 +1132,11 @@ function initDocsModalEvents() {
 
       e.currentTarget.classList.add('active');
       const targetId = e.currentTarget.getAttribute('data-docstab');
-      document.getElementById(targetId).classList.add('active');
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.classList.add('active');
+        renderKaTeX();
+      }
     });
   });
 }
@@ -992,6 +1144,7 @@ function initDocsModalEvents() {
 function openDocsModal() {
   playKeySound();
   docsModal.classList.remove('hidden');
+  setTimeout(renderKaTeX, 50);
 }
 
 function closeDocsModal() {
@@ -1081,6 +1234,42 @@ function initModeModalEvents() {
     });
   });
 
+  // Exponents Preset Buttons
+  document.querySelectorAll('.preset-btn[data-type^="exp-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const expKind = type.replace('exp-', '');
+      state.activeMode = 'EXPONENTS';
+      state.expModeType = expKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Üslü Sayılar Modu (${expKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
+  // Square Roots Preset Buttons (YENİ KAREKÖK BUTON DİNLEYİCİSİ)
+  document.querySelectorAll('.preset-btn[data-type^="root-"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      playKeySound();
+      const type = e.currentTarget.getAttribute('data-type');
+      const rootKind = type.replace('root-', '');
+      state.activeMode = 'SQUARE_ROOTS';
+      state.rootModeType = rootKind;
+
+      if (state.hackerTimerEnabled) startHackerTimer();
+
+      addLog(`[MOD] Karekök İfadeler Modu (${rootKind}) başlatıldı.`, 'info');
+      updateHUD();
+      loadQuestion();
+      closeModeModal();
+    });
+  });
+
   // Addition Preset Buttons
   document.querySelectorAll('.preset-btn[data-type^="add-"]').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -1147,7 +1336,7 @@ function closeModeModal() {
 }
 
 // ==========================================
-// 8. LEVEL UP & BADGES & STATS
+// 9. LEVEL UP & BADGES & STATS
 // ==========================================
 function triggerLevelUpModal() {
   playLevelUpSound();
