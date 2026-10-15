@@ -143,6 +143,7 @@ let state = {
   totalAttempts: 0,
   soundEnabled: true,
   matrixEnabled: true,
+  learningProgress: {},
   currentQuestion: null,
   startTime: Date.now(),
   badges: []
@@ -252,7 +253,7 @@ function resizeMatrix() {
 }
 
 function drawMatrix() {
-  if (!ctx || !state.matrixEnabled) return;
+  if (!ctx || !state.matrixEnabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   ctx.fillStyle = 'rgba(6, 9, 14, 0.08)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -470,8 +471,8 @@ function gcd(a, b) {
 }
 
 // GEOMETRİ & ÖZEL ÜÇGENLER MOTORU
-function genCustomGeometry() {
-  if (state.geomModeType === 'pyth') {
+function genCustomGeometry(mode = state.geomModeType) {
+  if (mode === 'pyth') {
     const triples = [
       { a: 3, b: 4, c: 5 },
       { a: 6, b: 8, c: 10 },
@@ -487,7 +488,7 @@ function genCustomGeometry() {
       q: `Dik kenarları ${t.a} ve ${t.b} olan dik üçgenin hipotenüsü = ?`,
       ans: t.c
     };
-  } else if (state.geomModeType === 'area') {
+  } else if (mode === 'area') {
     const isSquare = Math.random() > 0.5;
     if (isSquare) {
       const side = getRandomInt(3, 15);
@@ -977,11 +978,29 @@ const timeupBestStreak = document.getElementById('timeup-best-streak');
 const restartTimerBtn = document.getElementById('restart-timer-btn');
 const hackerTimerCheckbox = document.getElementById('hacker-timer-checkbox');
 
+let savedEnvelope = {};
+let canWriteSave = true;
+let activeArea = 'practice';
+let questionTransition = null;
+let answerLocked = false;
+let pendingLevelUp = false;
+
+function storageNotice(message) {
+  const notice = document.getElementById('storage-notice');
+  notice.textContent = message;
+  notice.classList.remove('hidden');
+}
+
 function loadSavedData() {
   try {
     const saved = localStorage.getItem('MATH_DECIPHER_SAVE_v3');
     if (saved) {
       const parsed = JSON.parse(saved);
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('Invalid save object');
+      savedEnvelope = parsed;
+      if (parsed.learningProgress && typeof parsed.learningProgress === 'object' && !Array.isArray(parsed.learningProgress)) {
+        state.learningProgress = parsed.learningProgress;
+      }
       state.highScore = parsed.highScore || 0;
       state.unlockedLevelIndex = parsed.unlockedLevelIndex || 0;
       state.totalSolved = parsed.totalSolved || 0;
@@ -993,30 +1012,36 @@ function loadSavedData() {
       }
     }
   } catch (e) {
+    canWriteSave = false;
+    storageNotice('Kayıt okunamadı. Eski kaydın değiştirilmedi; bu oturumdaki ilerleme kaydedilemiyor.');
     console.error('Save loading error:', e);
   }
 }
 
 function saveData() {
+  if (!canWriteSave) return;
   try {
     const toSave = {
+      ...savedEnvelope,
       highScore: state.highScore,
       unlockedLevelIndex: state.unlockedLevelIndex,
       totalSolved: state.totalSolved,
       totalAttempts: state.totalAttempts,
       bestStreak: state.bestStreak,
       badges: state.badges,
-      dailyState: state.dailyState
+      dailyState: state.dailyState,
+      learningProgress: state.learningProgress
     };
     localStorage.setItem('MATH_DECIPHER_SAVE_v3', JSON.stringify(toSave));
   } catch (e) {
+    storageNotice('İlerlemen bu tarayıcıda kaydedilemedi. Bu oturumda çalışmaya devam edebilirsin.');
     console.error('Save writing error:', e);
   }
 }
 
 function initApp() {
   loadSavedData();
-  generateDailyQuestions();
+  if (!state.dailyState.questions.length) generateDailyQuestions();
   resizeMatrix();
   window.addEventListener('resize', resizeMatrix);
 
@@ -1058,13 +1083,15 @@ function initApp() {
   document.addEventListener('keydown', (e) => {
     initAudio();
     if (e.key === 'Escape') {
-      answerInput.value = '';
-      closeStatsModal();
-      closeModeModal();
-      closeDocsModal();
-      closeDailyModal();
-      closeLevelupModal();
-      if (timeupModal) timeupModal.classList.add('hidden');
+      const openModal = document.querySelector('.modal-overlay:not(.hidden)');
+      if (openModal) {
+        dismissModal(openModal);
+      } else if (activeArea === 'practice') {
+        answerInput.value = '';
+      } else {
+        const lessonInput = document.getElementById('lesson-answer');
+        if (lessonInput && !lessonInput.readOnly) lessonInput.value = '';
+      }
     }
   });
 
@@ -1109,9 +1136,9 @@ function startDailyChallengeRun() {
 }
 
 // HACKER TIMER LOGIC
-function startHackerTimer() {
+function startHackerTimer(reset = true) {
   stopHackerTimer();
-  state.timerSeconds = 60;
+  if (reset) state.timerSeconds = 60;
   timerBox.classList.remove('hidden');
   timerDisplay.textContent = `${state.timerSeconds}s`;
 
@@ -1433,6 +1460,10 @@ function selectCampaignLevel(idx) {
 // 7. QUESTION & DECIPHER LOGIC
 // ==========================================
 function loadQuestion() {
+  clearTimeout(questionTransition);
+  questionTransition = null;
+  answerLocked = false;
+  pendingLevelUp = false;
   if (state.activeMode === 'CAMPAIGN') {
     const lvlConfig = LEVELS[state.currentLevelIndex];
     state.currentQuestion = lvlConfig.gen();
@@ -1440,11 +1471,12 @@ function loadQuestion() {
     if (state.dailyState.currentIndex < state.dailyState.questions.length) {
       state.currentQuestion = state.dailyState.questions[state.dailyState.currentIndex];
     } else {
+      answerLocked = true;
       state.dailyState.completed = true;
       if (state.score > state.dailyState.bestScore) state.dailyState.bestScore = state.score;
       saveData();
       addLog(`[GÜNLÜK GÖREV] TEBRİKLER! Bugünü 10/10 Tamamladınız! Skor: ${state.score}`, 'levelup');
-      openDailyModal();
+      if (activeArea === 'practice') openDailyModal();
       return;
     }
   } else if (state.activeMode === 'COMPUTER_BASES') {
@@ -1477,31 +1509,42 @@ function loadQuestion() {
     state.currentQuestion = genCustomDivision();
   }
 
-  let glitchTicks = 0;
-  questionText.style.opacity = '0.5';
+  const hexAnswer = !!state.currentQuestion.altAns && /^0x/i.test(state.currentQuestion.altAns);
+  document.getElementById('hex-numpad').classList.toggle('hidden', !hexAnswer);
+  answerInput.inputMode = hexAnswer ? 'text' : 'decimal';
+  questionText.classList.toggle('long-question', state.currentQuestion.q.length > 28);
+  const animate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  questionText.textContent = state.currentQuestion.q;
+  questionText.style.opacity = '1';
+  if (animate) {
+    let glitchTicks = 0;
+    questionText.style.opacity = '0.5';
 
-  const glitchInterval = setInterval(() => {
-    let randHex = '';
-    for (let i = 0; i < 12; i++) {
-      randHex += katakana.charAt(Math.floor(Math.random() * katakana.length));
-    }
-    cipherGlitchText.textContent = randHex;
-    glitchTicks++;
+    const glitchInterval = setInterval(() => {
+      let randHex = '';
+      for (let i = 0; i < 12; i++) {
+        randHex += katakana.charAt(Math.floor(Math.random() * katakana.length));
+      }
+      cipherGlitchText.textContent = randHex;
+      glitchTicks++;
 
-    if (glitchTicks > 5) {
-      clearInterval(glitchInterval);
-      cipherGlitchText.textContent = `HASH: [0x${Math.floor(Math.random()*0xFFFFFF).toString(16).toUpperCase()}]`;
-      questionText.textContent = state.currentQuestion.q;
-      questionText.style.opacity = '1';
-    }
-  }, 40);
+      if (glitchTicks > 5) {
+        clearInterval(glitchInterval);
+        cipherGlitchText.textContent = `HASH: [0x${Math.floor(Math.random()*0xFFFFFF).toString(16).toUpperCase()}]`;
+        questionText.textContent = state.currentQuestion.q;
+        questionText.style.opacity = '1';
+      }
+    }, 40);
+  }
 
   answerInput.value = '';
-  answerInput.focus();
+  if (activeArea === 'practice' && !document.querySelector('.modal-overlay:not(.hidden)')) answerInput.focus({ preventScroll: true });
 }
 
 function handleAnswerSubmit(e) {
   e.preventDefault();
+  if (activeArea !== 'practice' || answerLocked || !state.currentQuestion || document.querySelector('.modal-overlay:not(.hidden)')) return;
+  if (state.hackerTimerEnabled && state.timerSeconds <= 0) { triggerTimeUpModal(); return; }
   const val = answerInput.value.trim().toLowerCase();
   if (val === '') return;
 
@@ -1518,6 +1561,7 @@ function handleAnswerSubmit(e) {
 }
 
 function handleCorrectAnswer() {
+  answerLocked = true;
   playSuccessSound();
   state.streak++;
   state.totalSolved++;
@@ -1542,11 +1586,10 @@ function handleCorrectAnswer() {
   addLog(`[OK] Paket çözüldü! (+${points} puan)${extraText}`, 'success');
 
   checkBadges();
-  saveData();
 
   if (state.activeMode === 'DAILY_CHALLENGE') {
     state.dailyState.currentIndex++;
-    setTimeout(loadQuestion, 350);
+    questionTransition = setTimeout(loadQuestion, 350);
   } else if (state.activeMode === 'CAMPAIGN') {
     const currentLvlConfig = LEVELS[state.currentLevelIndex];
     if (state.levelSolvedCount >= currentLvlConfig.required) {
@@ -1554,18 +1597,19 @@ function handleCorrectAnswer() {
         if (state.currentLevelIndex === state.unlockedLevelIndex) {
           state.unlockedLevelIndex++;
         }
-        setTimeout(triggerLevelUpModal, 400);
+        questionTransition = setTimeout(triggerLevelUpModal, 400);
       } else {
         addLog(`[SYSTEM] TEBRİKLER! Tüm Kuantum Katmanları Çözüldü!`, 'levelup');
-        setTimeout(loadQuestion, 500);
+        questionTransition = setTimeout(loadQuestion, 500);
       }
     } else {
-      setTimeout(loadQuestion, 350);
+      questionTransition = setTimeout(loadQuestion, 350);
     }
   } else {
-    setTimeout(loadQuestion, 350);
+    questionTransition = setTimeout(loadQuestion, 350);
   }
 
+  saveData();
   updateHUD();
 }
 
@@ -1576,6 +1620,7 @@ function handleWrongAnswer(userAns, targetAns) {
   showFeedback(`[HATA] Girilen: ${userAns} | Doğru Şifre: ${targetAns}`, false);
   addLog(`[ERR] Hatalı kod! Paket reddedildi. Doğru yanıt: ${targetAns}`, 'error');
 
+  saveData();
   updateHUD();
   answerInput.value = '';
   answerInput.focus();
@@ -1602,6 +1647,7 @@ function addLog(text, type = 'info') {
 }
 
 function handleNumpadClick(e) {
+  if (answerLocked || activeArea !== 'practice') return;
   playKeySound();
   const key = e.currentTarget.getAttribute('data-key');
   if (key === 'clear') {
@@ -1614,6 +1660,8 @@ function handleNumpadClick(e) {
     if (!answerInput.value.includes('-')) {
       answerInput.value = '-' + answerInput.value;
     }
+  } else if (key === '.') {
+    if (!answerInput.value.includes('.')) answerInput.value += answerInput.value === '' || answerInput.value === '-' ? '0.' : '.';
   } else {
     answerInput.value += key;
   }
@@ -1966,6 +2014,8 @@ function closeModeModal() {
 // 9. LEVEL UP & BADGES & STATS
 // ==========================================
 function triggerLevelUpModal() {
+  if (activeArea === 'learning') { pendingLevelUp = true; return; }
+  pendingLevelUp = false;
   playLevelUpSound();
   const nextLvlIndex = state.currentLevelIndex + 1;
   const nextLvl = LEVELS[nextLvlIndex];
@@ -1978,8 +2028,9 @@ function triggerLevelUpModal() {
 }
 
 function closeLevelupModal() {
+  if (levelupModal.classList.contains('hidden')) return;
   levelupModal.classList.add('hidden');
-  state.currentLevelIndex++;
+  state.currentLevelIndex = Math.min(LEVELS.length - 1, state.currentLevelIndex + 1);
   state.levelSolvedCount = 0;
   renderLevelButtons();
   updateHUD();
@@ -2040,12 +2091,16 @@ function closeStatsModal() {
 
 function toggleSound() {
   state.soundEnabled = !state.soundEnabled;
-  soundBtn.textContent = state.soundEnabled ? '🔊 SES' : '🔇 MUTE';
+  soundBtn.textContent = state.soundEnabled ? '🔊 Ses: açık' : '🔇 Ses: kapalı';
+  soundBtn.setAttribute('aria-pressed', String(state.soundEnabled));
 }
 
 function toggleMatrix() {
   state.matrixEnabled = !state.matrixEnabled;
-  if (matrixToggleBtn) matrixToggleBtn.textContent = state.matrixEnabled ? 'MATRIX' : 'NO-MATRIX';
+  if (matrixToggleBtn) {
+    matrixToggleBtn.textContent = state.matrixEnabled ? 'Matrix: açık' : 'Matrix: kapalı';
+    matrixToggleBtn.setAttribute('aria-pressed', String(state.matrixEnabled));
+  }
   if (!state.matrixEnabled && ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }

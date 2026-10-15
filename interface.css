@@ -1,0 +1,200 @@
+/* Responsive retro layout and the learning workspace. */
+body { --line: #305047; --soft: #0b211c; --surface: #0a101a; --text-dim: #9ab4b9; line-height: 1.5; }
+* { user-select: auto; }
+button, summary { touch-action: manipulation; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .5; }
+button, summary, .cyber-btn.sm, .lvl-select-btn, .chip-btn, .close-btn { min-height: 44px; }
+button:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--text-cyan); outline-offset: 4px;
+}
+.switch:focus-within { outline: 3px solid var(--text-cyan); outline-offset: 5px; border-radius: 20px; }
+.skip-link { position: fixed; top: -90px; left: 16px; padding: 12px; background: var(--surface); color: var(--text-green); z-index: 200; }
+.skip-link:focus { top: 12px; }
+.app-container { width: min(1200px, calc(100% - 64px)); max-width: 1200px; padding: 0; }
+.sys-header { background: transparent; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; box-shadow: none; padding: 24px 0 16px; gap: 20px; backdrop-filter: none; }
+.sys-brand { gap: 12px; }
+.brand-mark { display: grid; place-items: center; position: relative; width: 48px; height: 48px; border-radius: 16px; background: var(--text-green); color: var(--bg-dark); font-family: Georgia, serif; font-size: 36px; font-weight: bold; line-height: 1; }
+.brand-mark > span { position: absolute; font: bold 16px system-ui; right: 5px; top: 4px; }
+.brand-title { font-family: system-ui, sans-serif; text-transform: lowercase; color: var(--text-light); text-shadow: none; font-size: 24px; letter-spacing: -1px; }
+.brand-sub { display: block; color: var(--text-dim); font-size: 9px; font-weight: 600; letter-spacing: 1.4px; }
+.sys-metrics { margin-left: auto; gap: 24px; }
+.metric-box { align-items: flex-start; }
+.metric-val { font: 700 20px var(--font-mono); letter-spacing: -1px; }
+.metric-label { font-size: 10px; }
+.sys-controls { width: 100%; flex-wrap: wrap; gap: 8px; }
+.cyber-btn { border-radius: 9px; padding: 10px 16px; letter-spacing: 0; }
+.sys-controls .cyber-btn.sm { font: 600 13px var(--font-tech); padding: 8px 15px; }
+#sound-btn { margin-left: auto; }
+.workspace-heading { padding: 42px 0 34px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.eyebrow { font-size: 10px; font-weight: 750; letter-spacing: 1.8px; color: var(--text-green); margin-bottom: 12px; }
+h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1.12; font-weight: 650; letter-spacing: -1.9px; }
+h1 em { font-family: Georgia, 'Times New Roman', serif; color: var(--text-green); font-weight: 500; }
+.workspace-heading p:not(.eyebrow) { color: var(--text-dim); margin-top: 16px; font-size: 15px; }
+.heading-note { padding: 20px 32px; border-left: 1px solid var(--line); color: var(--text-green); display: flex; flex-direction: column; gap: 2px; transform: rotate(-3deg); }
+.heading-note > span { font: 32px var(--font-mono); }
+.heading-note > span:nth-child(2)::before { content: '↳ '; font-size: 22px; color: var(--text-dim); }
+.heading-note strong { margin-top: 10px; font-size: 11px; font-weight: 500; }
+.area-nav { display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--line); margin-bottom: 26px; }
+.area-nav button { display: flex; align-items: center; gap: 10px; border: 0; border-bottom: 3px solid transparent; color: var(--text-dim); background: none; padding: 14px 20px; font-weight: 650; }
+.area-nav button[aria-current] { border-color: var(--text-green); color: var(--text-green); }
+.area-nav button span { font-size: 10px; font-weight: 500; background: var(--soft); padding: 2px 7px; border-radius: 8px; }
+.local-note { margin-left: auto; font-size: 11px; color: var(--text-dim); }
+.practice-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 26px; align-items: start; }
+.terminal-window { border-radius: 18px; }
+.terminal-content { padding: 26px; gap: 18px; }
+.level-banner { padding: 0; border: 0; background: transparent; }
+.level-header { align-items: flex-start; }
+.level-header h2 { font-size: 14px; letter-spacing: .2px; line-height: 1.6; }
+.progress-counter { font-size: 11px; line-height: 2; }
+.level-sub { line-height: 1.6; font-size: 13px; margin: 6px 0 12px; }
+.progress-bar-container { height: 5px; border: 0; background: var(--soft); }
+.progress-bar-fill { background: var(--text-green); box-shadow: none; }
+.cipher-box { min-height: 180px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); box-shadow: none; display: flex; flex-direction: column; justify-content: center; padding: 24px; }
+.question-display { color: var(--text-light); font-family: var(--font-mono); font-size: clamp(24px, 3.2vw, 40px); line-height: 1.4; letter-spacing: -1px; text-shadow: none; overflow-wrap: anywhere; }
+.question-display.long-question { font-size: clamp(20px, 2.2vw, 28px); letter-spacing: -.5px; }
+.console-input-row { border-color: var(--line); border-radius: 10px; padding: 8px 10px; background: var(--surface); flex-wrap: wrap; }
+.prompt-symbol { color: var(--text-dim); font-size: 12px; }
+.cyber-input { color: var(--text-light); min-height: 44px; letter-spacing: 0; }
+.cyber-input::placeholder { color: var(--text-dim); font-size: 14px; }
+.input-help { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+#answer-help { margin-top: -12px; }
+.numpad-container { max-width: none; gap: 8px; }
+.numpad-btn { font-family: var(--font-mono); font-size: 20px; border-color: var(--line); background: var(--surface); border-radius: 9px; padding: 8px; }
+.numpad-btn[data-key='0'] { grid-column: span 2; }
+.numpad-btn.action { background: var(--soft); border-color: var(--line); color: var(--text-green); }
+.numpad-btn.submit { background: var(--text-green); color: var(--bg-dark); }
+.hex-numpad { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.console-log-box { background: transparent; border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 4px 0 0; }
+.log-header { cursor: pointer; display: list-item; font-size: 12px; padding: 12px 0; border: 0; margin: 0; }
+#log-clock { float: right; font-size: 11px; }
+.log-lines { max-height: 170px; }
+.practice-aside { background: var(--soft); color: var(--text-light); border-radius: 18px; padding: 28px; }
+.practice-aside h2 { font: 500 29px/1.15 Georgia, serif; letter-spacing: -.5px; margin-bottom: 16px; }
+.practice-aside p:not(.eyebrow) { font-size: 13px; line-height: 1.8; }
+.mini-equation { display: grid; gap: 10px; border-block: 1px solid var(--line); padding: 18px 0; margin: 22px 0; font: 19px var(--font-mono); }
+.mini-equation b { background: var(--surface); padding: 3px 5px; border-radius: 5px; }
+.practice-aside .cyber-btn { width: 100%; font-size: 13px; }
+.aside-footnote { margin-top: 14px; font-size: 12px !important; }
+.practice-aside hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+.level-nav { margin-top: 10px; border-color: var(--line); border-radius: 12px; padding: 14px 18px; flex-wrap: wrap; overflow: visible; }
+.level-btn-group { flex-wrap: wrap; gap: 6px; }
+.lvl-select-btn { min-width: 48px; font-family: var(--font-mono); }
+.sys-footer { margin-top: 32px; padding: 20px 0; border-color: var(--line); color: var(--text-dim); gap: 12px; flex-wrap: wrap; }
+/* All existing topics remain in the menu; wrapped buttons expose their names. */
+.modal-overlay { padding: 24px; background: #10281ecc; height: 100dvh; }
+.cyber-window { max-width: 950px; max-height: 90dvh; border-radius: 18px; }
+.modal-header { padding: 16px 24px; border-color: var(--line); background: var(--soft); gap: 16px; }
+.modal-header h3 { font-size: 19px; }
+.close-btn { min-width: 44px; color: var(--text-light); }
+.close-btn:hover { color: var(--text-alert); }
+.modal-body { padding: 24px; }
+.mode-tabs, .docs-tabs { flex-wrap: wrap; gap: 8px; overflow: visible; border-color: var(--line); padding-bottom: 18px; }
+.mode-tab-btn, .docs-tab-btn { white-space: normal; text-align: left; font: 600 12px/1.4 var(--font-tech); padding: 10px 12px; border-color: var(--line); border-radius: 8px; }
+.preset-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.preset-btn { text-align: left; padding: 18px; border-radius: 10px; }
+.preset-title { font-size: 14px; }
+.preset-sub, .shortcut-desc, .example-box, .tab-sub { font-size: 13px; line-height: 1.7; }
+.hacker-timer-toggle-card { box-shadow: none; background: var(--soft); border-color: var(--line); }
+.switch { height: 44px; }
+.slider { top: 9px; bottom: 9px; }
+.toggle-sub { font-size: 12px; }
+.daily-stat-row { gap: 10px; flex-wrap: wrap; }
+/* Learning workspace */
+.learning-heading { display: flex; gap: 18px; justify-content: space-between; align-items: center; margin: 30px 0; }
+.learning-heading h2 { font-size: 25px; font-weight: 600; letter-spacing: -.5px; }
+.learning-heading p:not(.eyebrow) { color: var(--text-dim); font-size: 14px; margin-top: 8px; }
+#learning-progress { font-size: 12px; color: var(--text-green); background: var(--soft); padding: 12px 16px; border-radius: 10px; white-space: nowrap; }
+.learning-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 26px; align-items: start; }
+#lesson-list { display: grid; gap: 12px; }
+.lesson-link { background: var(--surface); border: 1px solid var(--line); color: var(--text-light); padding: 20px; border-radius: 12px; text-align: left; display: grid; gap: 8px; }
+.lesson-link[aria-current] { border: 2px solid var(--text-green); background: var(--soft); padding: 19px; }
+.lesson-number { font: 12px var(--font-mono); color: var(--text-green); }
+.lesson-link strong { font-size: 16px; }
+.lesson-link small { font-size: 12px; color: var(--text-dim); }
+.lesson-workspace { padding: 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+.lesson-workspace h3 { font-size: 28px; font-weight: 600; letter-spacing: -.7px; line-height: 1.2; }
+.lesson-workspace p { font-size: 15px; line-height: 1.8; margin-top: 16px; }
+.lesson-meta { color: var(--text-dim); font-size: 12px !important; }
+.lesson-steps { list-style: none; display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; padding: 0; }
+.lesson-steps li { font-size: 12px; color: var(--text-dim); border-bottom: 3px solid var(--line); padding-bottom: 8px; }
+.lesson-steps [aria-current] { border-color: var(--text-green); color: var(--text-green); font-weight: 700; }
+.lesson-example { background: var(--soft); border-radius: 12px; padding: 24px; margin: 20px 0; }
+.lesson-example h4 { font-size: 13px; color: var(--text-green); }
+.lesson-example .math-line, .practice-question { font: 500 28px/1.5 var(--font-mono); margin: 12px 0; overflow-wrap: anywhere; }
+.worked-steps { padding-left: 22px; margin-top: 18px; }
+.worked-steps li { padding: 4px 0 4px 8px; font-size: 15px; line-height: 1.8; }
+.lesson-rule { border-left: 3px solid var(--text-green); padding: 2px 0 4px 16px; }
+.lesson-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.lesson-form { margin-top: 24px; }
+.lesson-form label { display: block; font-size: 16px; font-weight: 600; line-height: 1.7; }
+.lesson-answer-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.lesson-answer-row input { width: 140px; min-height: 48px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; color: var(--text-light); background: var(--surface); font: 22px var(--font-mono); }
+.lesson-feedback { border-radius: 8px; padding: 12px 16px; background: var(--soft); color: var(--text-green); margin-top: 16px; font-size: 14px; line-height: 1.8; }
+.lesson-feedback:empty { display: none; }
+.lesson-feedback.error { color: var(--text-alert); }
+.lesson-hint { margin-top: 16px; font-size: 14px; }
+.lesson-hint summary { cursor: pointer; color: var(--text-green); padding: 10px 0; }
+.lesson-hint p { margin: 4px 0 12px; font-size: 14px; }
+.storage-notice { border: 1px solid var(--text-alert); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+@media (max-width: 950px) {
+  .app-container { width: calc(100% - 40px); }
+  .practice-layout { grid-template-columns: minmax(0, 1fr) 230px; gap: 18px; }
+  .practice-aside { padding: 22px; }
+  .local-note { display: none; }
+  .learning-layout { grid-template-columns: 210px minmax(0, 1fr); gap: 18px; }
+}
+@media (max-width: 700px) {
+  .app-container { width: calc(100% - 28px); }
+  .sys-header { padding-top: 18px; gap: 16px; }
+  .sys-metrics { width: 100%; margin: 0; justify-content: space-between; gap: 10px; }
+  .sys-controls { gap: 6px; }
+  .sys-controls .cyber-btn.sm { flex: 1 1 auto; padding: 8px 10px; font-size: 12px; }
+  #sound-btn { margin-left: 0; }
+  .workspace-heading { padding: 28px 0; }
+  .heading-note { display: none; }
+  .workspace-heading p:not(.eyebrow) { font-size: 14px; }
+  .area-nav { gap: 0; margin-bottom: 18px; }
+  .area-nav button { padding: 12px 10px; gap: 6px; font-size: 14px; }
+  .area-nav button span { font-size: 9px; }
+  .practice-layout, .learning-layout { grid-template-columns: 1fr; }
+  .practice-aside { padding: 22px; }
+  .practice-aside h2 br { display: none; }
+  .practice-aside h2 { font-size: 27px; }
+  .terminal-content, .lesson-workspace { padding: 20px; }
+  .level-header { flex-wrap: wrap; }
+  .level-header h2 { font-size: 13px; }
+  .console-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; }
+  .prompt-symbol { grid-column: 1 / -1; }
+  .cyber-input { width: 100%; font-size: 20px; }
+  #submit-btn { padding: 10px; font-size: 12px; }
+  .cipher-box { padding: 16px; min-height: 160px; }
+  .question-display { font-size: 30px; }
+  .numpad-btn { min-height: 48px; font-size: 20px; }
+  .modal-overlay { padding: 10px; }
+  .cyber-window { max-height: 94dvh; }
+  .modal-header, .modal-body { padding: 16px; }
+  .modal-header h3 { font-size: 17px; }
+  .mode-tabs, .docs-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .mode-tab-btn, .docs-tab-btn { font-size: 10px; padding: 9px; }
+  .preset-grid { grid-template-columns: 1fr; }
+  .range-controls-direct { padding: 10px; }
+  .range-input-lg { width: 76px; }
+  .direct-range-card { padding: 14px; }
+  .learning-heading { align-items: flex-start; flex-direction: column; }
+  .learning-heading h2 { font-size: 23px; }
+  #lesson-list { grid-template-columns: 1fr; gap: 8px; }
+  .lesson-link { padding: 14px; grid-template-columns: 28px 1fr; gap: 4px 8px; }
+  .lesson-link[aria-current] { padding: 13px; }
+  .lesson-link small { grid-column: 2; }
+  .lesson-link strong { font-size: 14px; }
+  .lesson-workspace h3 { font-size: 25px; }
+  .lesson-example { padding: 18px; }
+  .lesson-actions .cyber-btn { flex: 1 1 auto; }
+  .sys-footer { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  #matrix-canvas { display: none; }
+}

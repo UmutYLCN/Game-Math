@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MATH_DECIPHER // Cyber Math Terminal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Math — Zihinden matematik atölyesi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
@@ -11,23 +11,24 @@
   <!-- KaTeX Math Rendering Stylesheet -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="interface.css">
 
   <!-- KaTeX JavaScript Engine -->
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
-<body class="crt-effect">
+<body class="retro-theme crt-effect">
+  <a class="skip-link" href="#workspace">İçeriğe geç</a>
   <!-- Matrix Rain Canvas Background -->
-  <canvas id="matrix-canvas"></canvas>
+  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
   <div class="scanline-overlay"></div>
 
   <div class="app-container">
     <!-- Top System Header Bar -->
     <header class="sys-header">
       <div class="sys-brand">
-        <span class="pulse-dot"></span>
-        <span class="brand-title">MATH_DECIPHER</span>
-        <span class="sys-ver">v9.5_DECIMAL_BASES</span>
+        <span class="brand-mark" aria-hidden="true">m<span>+</span></span>
+        <span class="brand-title">game math<span class="brand-sub">ZİHİNDEN MATEMATİK ATÖLYESİ</span></span>
       </div>
 
       <div class="sys-metrics">
@@ -52,26 +53,40 @@
 
       <div class="sys-controls">
         <button id="daily-btn" class="cyber-btn sm gold-glow" title="Günün Özel Şifresi & 10 Soruluk Günlük Mücadele">
-          🏆 GÜNLÜK GÖREV
+          Günlük görev
         </button>
         <button id="mode-btn" class="cyber-btn sm primary" title="Çalışma Modunu Değiştir">
-          🎯 MOD SEÇİMİ
+          Mod seç
         </button>
         <button id="docs-btn" class="cyber-btn sm gold-glow" title="Zihinsel İşlem Kısayolları Rehberi">
-          📚 KISAYOLLAR
+          Formül rehberi
         </button>
-        <button id="sound-btn" class="cyber-btn sm" title="Ses Aç/Kapat">
+        <button id="sound-btn" class="cyber-btn sm" title="Ses Aç/Kapat" aria-pressed="true">
           <span id="sound-icon">🔊</span> SES
         </button>
-        <button id="matrix-toggle-btn" class="cyber-btn sm hidden-mobile" title="Matrix Yağmuru">
-          MATRIX
+        <button id="matrix-toggle-btn" class="cyber-btn sm" title="Matrix Yağmuru" aria-pressed="true">
+          Matrix: açık
         </button>
         <button id="stats-btn" class="cyber-btn sm">
-          📊 RAPOR
+          İstatistikler
         </button>
       </div>
     </header>
 
+    <div class="workspace-heading">
+      <div><p class="eyebrow">HER GÜN BİR KÜÇÜK ADIM</p><h1>Matematiğe bir de<br><em>bu yoldan bak.</em></h1>
+      <p>Sayıları tanı, yöntemini keşfet, kendi hızında pratik yap.</p></div>
+      <div class="heading-note"><span aria-hidden="true">28 + 7</span><span>30 + 5</span><strong>Aynı toplam. Daha tanıdık sayılar.</strong></div>
+    </div>
+    <nav class="area-nav" aria-label="Ana gezinme">
+      <button id="practice-nav" aria-current="page" aria-controls="practice-area">Pratik yap <span>16 mod</span></button>
+      <button id="learn-nav" aria-controls="learning-area">Öğren <span>3 temel strateji</span></button>
+      <span class="local-note">İlerlemen bu tarayıcıda saklanır</span>
+    </nav>
+    <div id="storage-notice" role="status" class="storage-notice hidden"></div>
+    <div id="workspace" tabindex="-1">
+    <section id="practice-area" aria-label="Matematik pratiği">
+    <div class="practice-layout">
     <!-- Main Terminal Container -->
     <main class="terminal-wrapper">
       <div class="terminal-window">
@@ -115,22 +130,24 @@
             </div>
 
             <!-- Answer Feedback Banner -->
-            <div id="feedback-banner" class="feedback-banner hidden">
+            <div id="feedback-banner" class="feedback-banner hidden" role="status" aria-live="polite">
               <span id="feedback-text">DECRYPTION SUCCESSFUL!</span>
             </div>
           </div>
 
           <!-- Terminal Input Console -->
           <form id="answer-form" class="console-input-row" autocomplete="off">
-            <div class="prompt-symbol">SYS_INPUT &gt;</div>
-            <input type="text" id="answer-input" class="cyber-input" placeholder="Cevap..." autofocus autocomplete="off" inputmode="text">
+            <label for="answer-input" class="prompt-symbol">Yanıtın</label>
+            <input type="text" id="answer-input" class="cyber-input" placeholder="Cevabını yaz" autocomplete="off" inputmode="decimal" aria-describedby="answer-help">
             <button type="submit" id="submit-btn" class="cyber-btn primary">
-              <span>ŞİFREYİ ÇÖZ</span> [ENTER]
+              <span>Kontrol et</span> ↵
             </button>
           </form>
 
+          <p id="answer-help" class="input-help">Enter ile kontrol et · Escape ile temizle · Ondalık için nokta kullan.</p>
+
           <!-- On-screen Cyber Numpad (Mobile Friendly) -->
-          <div class="numpad-container">
+          <div class="numpad-container" role="group" aria-label="Ekran klavyesi">
             <button type="button" class="numpad-btn" data-key="7">7</button>
             <button type="button" class="numpad-btn" data-key="8">8</button>
             <button type="button" class="numpad-btn" data-key="9">9</button>
@@ -139,32 +156,52 @@
             <button type="button" class="numpad-btn" data-key="4">4</button>
             <button type="button" class="numpad-btn" data-key="5">5</button>
             <button type="button" class="numpad-btn" data-key="6">6</button>
-            <button type="button" class="numpad-btn action" data-key="clear">CLR</button>
+            <button type="button" class="numpad-btn action" data-key="clear" aria-label="Yanıtı temizle">CLR</button>
 
             <button type="button" class="numpad-btn" data-key="1">1</button>
             <button type="button" class="numpad-btn" data-key="2">2</button>
             <button type="button" class="numpad-btn" data-key="3">3</button>
-            <button type="button" class="numpad-btn action submit" data-key="submit">↵</button>
+            <button type="button" class="numpad-btn action submit" data-key="submit" aria-label="Yanıtı kontrol et">↵</button>
 
-            <button type="button" class="numpad-btn zero" data-key="0">0</button>
-            <button type="button" class="numpad-btn" data-key="backspace">⌫</button>
+            <button type="button" class="numpad-btn" data-key="0">0</button>
+            <button type="button" class="numpad-btn" data-key="." aria-label="Ondalık nokta">.</button>
+            <button type="button" class="numpad-btn" data-key="backspace" aria-label="Son karakteri sil">⌫</button>
+          </div>
+          <div id="hex-numpad" class="hex-numpad hidden" role="group" aria-label="Onaltılık basamaklar">
+            <button type="button" class="numpad-btn" data-key="A">A</button>
+            <button type="button" class="numpad-btn" data-key="B">B</button>
+            <button type="button" class="numpad-btn" data-key="C">C</button>
+            <button type="button" class="numpad-btn" data-key="D">D</button>
+            <button type="button" class="numpad-btn" data-key="E">E</button>
+            <button type="button" class="numpad-btn" data-key="F">F</button>
           </div>
 
           <!-- Console Event Log -->
-          <div class="console-log-box">
-            <div class="log-header">
-              <span>TERMINAL LOGS</span>
+          <details class="console-log-box">
+            <summary class="log-header">
+              <span>Etkinlik günlüğü / Terminal</span>
               <span id="log-clock">11:06:00</span>
-            </div>
+            </summary>
             <div id="log-content" class="log-lines">
               <div class="log-line info">[SYS_INIT] MATH_DECIPHER çekirdek sistemi yüklendi.</div>
               <div class="log-line info">[SYS_READY] Çalışma modunuz aktif. Soruları yanıtlayın.</div>
             </div>
-          </div>
+          </details>
         </div>
       </div>
     </main>
 
+    <aside class="practice-aside" aria-label="Öğrenme önerisi">
+      <p class="eyebrow">BİR YÖNTEM DENE</p>
+      <h2>Sonuca giden<br>yolu da öğren.</h2>
+      <p>Onluk tamamlama, sayıları parçalama ve dengeleme. Üç kısa derste adım adım ilerle.</p>
+      <div class="mini-equation"><span>28 + <b>2</b> + 5</span><span>30 + 5 = <strong>35</strong></span></div>
+      <button id="learn-start-btn" class="cyber-btn primary">Dersleri keşfet →</button>
+      <p class="aside-footnote">Süre yok. İpucu var.<br>İstediğin kadar tekrar et.</p>
+      <hr><p class="eyebrow">ALIŞTIRMA ALANIN</p>
+      <p>Tüm konular ve zorluklar <strong>Mod seç</strong> menüsünde. Süreli mücadeleyi aynı menüden açabilirsin.</p>
+    </aside>
+    </div>
     <!-- Level Navigation Bar (Campaign Mode) -->
     <nav class="level-nav" id="campaign-level-nav">
       <span class="nav-title">SEVİYELER:</span>
@@ -173,10 +210,20 @@
       </div>
     </nav>
 
+    </section>
+    <section id="learning-area" class="hidden" aria-labelledby="learning-title">
+      <div class="learning-heading"><div><p class="eyebrow">STRATEJİ ATÖLYESİ</p><h2 id="learning-title">Önce anla, sonra kendin dene.</h2>
+      <p>Her derste bir örnek, birlikte çözüm ve süresiz pratik.</p></div><strong id="learning-progress">0 / 3 ders tamamlandı</strong></div>
+      <p id="learning-timer-notice" class="input-help hidden">Süreli pratiğin duraklatıldı. Pratik alanına dönünce kaldığı süreden devam eder.</p>
+      <div class="learning-layout"><nav id="lesson-list" aria-label="Strateji dersleri"></nav>
+        <article id="lesson-workspace" class="lesson-workspace" aria-labelledby="lesson-title"></article>
+      </div>
+    </section>
+    </div>
     <!-- Footer -->
     <footer class="sys-footer">
-      <span>MATH_DECIPHER v9.5 DECIMAL BASES &copy; 2026</span>
-      <span>DOKUNMATİK & KLAVYE DESTEKLİ</span>
+      <span>Game Math · MATH_DECIPHER &copy; 2026</span>
+      <span>Öğren. Dene. Bir adım ilerle.</span>
     </footer>
   </div>
 
@@ -184,7 +231,7 @@
   <div id="mode-modal" class="modal-overlay hidden">
     <div class="modal-content cyber-window mode-modal-card">
       <div class="modal-header">
-        <h3>🎯 ÇALIŞMA VE HACKER MODU SEÇİMİ</h3>
+        <h3>Çalışma alanını seç</h3>
         <button id="close-mode-btn" class="close-btn">&times;</button>
       </div>
 
@@ -196,7 +243,7 @@
             <span class="toggle-sub">Her doğru cevap sürene +2 saniye ekler! (60s Geri Sayım)</span>
           </div>
           <label class="switch">
-            <input type="checkbox" id="hacker-timer-checkbox">
+            <input type="checkbox" id="hacker-timer-checkbox" aria-label="60 saniyelik süreli modu aç">
             <span class="slider round"></span>
           </label>
         </div>
@@ -238,12 +285,12 @@
 
             <div class="range-controls-direct">
               <div class="range-box-item">
-                <span class="field-desc">En Küçük Çarpan:</span>
+                <label class="field-desc" for="mult-min">En Küçük Çarpan:</label>
                 <input type="number" id="mult-min" min="1" max="30" value="1" class="range-input-lg">
               </div>
               <div class="range-dash">➔</div>
               <div class="range-box-item">
-                <span class="field-desc">En Büyük Çarpan:</span>
+                <label class="field-desc" for="mult-max">En Büyük Çarpan:</label>
                 <input type="number" id="mult-max" min="1" max="30" value="10" class="range-input-lg">
               </div>
             </div>
@@ -869,7 +916,7 @@
           <span class="glitch-title gold-glow">DAILY CIPHER MISSION</span>
           <h2 id="daily-date-title">TARIH: 2026-07-26</h2>
         </div>
-        <p class="tab-sub text-dim" style="margin-bottom: 1.2rem;">Her gün tüm siber matematikçilere aynı 10 soruluk özel görev verilir. En hızlı sürede 10/10 yaparak liderliği kap!</p>
+        <p class="tab-sub text-dim" style="margin-bottom: 1.2rem;">Her gün farklı konulardan 10 soruluk bir görev. Kendi hızında tamamla; istersen Mod seç menüsünden süreli çalışmayı aç.</p>
 
         <div class="daily-status-card">
           <div class="daily-stat-row">
@@ -962,5 +1009,7 @@
   </div>
 
   <script src="app.js"></script>
+  <script src="learning.js"></script>
+  <script src="interface.js"></script>
 </body>
 </html>
